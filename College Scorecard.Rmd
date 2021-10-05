@@ -1,0 +1,40 @@
+---
+title: "College Scorecard"
+author: "Mei Maddox, Mitchelle V., Conor Welsh"
+date: "10/5/2021"
+output:
+  pdf_document: default
+  html_document: default
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Directories
+
+```{r}
+rscripts <- "R Scripts"
+```
+
+## Dataset Preprocessing
+
+**Subsetting the columns** isolates the columns which are relavent to answering the question we are asking.
+
+```{r}
+source(file.path(rscripts, "subset_data.R"))
+csb21.sub <- subset.data(read.csv("Most-Recent-Cohorts-All-Data-Elements.csv"), seed=1234)
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
