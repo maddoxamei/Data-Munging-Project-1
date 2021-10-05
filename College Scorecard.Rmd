@@ -6,7 +6,7 @@ output:
   pdf_document: default
   html_document: default
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -26,6 +26,7 @@ rscripts <- "R Scripts"
 ```{r}
 source(file.path(rscripts, "subset_data.R"))
 csb21.sub <- subset.data(read.csv("Most-Recent-Cohorts-All-Data-Elements.csv"), seed=1234)
+print(paste("Subsetted data has", dim(csb21.sub), c("rows", "columns")))
 ```
 
 
