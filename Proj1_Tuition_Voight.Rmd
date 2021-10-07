@@ -85,15 +85,4 @@ t.test(as.integer(csb21.sub$MD_EARN_WNE_P10), tuit.sub$TUITIONFEE_OUT)
 #approx 0 p-value for both test
 
 
-
-#Dont include LMs
-library(stats)
-lm.obj.in <- lm(as.integer(csb21.sub$MD_EARN_WNE_P10) ~ tuit.sub$TUITIONFEE_IN)
-summary(lm.obj)
-plot(lm.obj)
-
-lm.obj.out <- lm(as.integer(csb21.sub$MD_EARN_WNE_P10) ~ tuit.sub$TUITIONFEE_OUT)
-summary(lm.obj)
-plot(lm.obj)
-# The Q-Q and other plots show assumptions arent met (normalization)
 ```
