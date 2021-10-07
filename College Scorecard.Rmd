@@ -59,8 +59,8 @@ densityplot(tuit.sub$COSTT4_P) #Approx normal, some right skew
 densityplot(tuit.sub$TUITIONFEE_IN) #Right skewed
 densityplot(tuit.sub$TUITIONFEE_OUT) #Right skewed
 
-# Calculating Z-scores for non-normality
-# on pop parameter not sample
+# Calculating Z-scores to see standard devs from mean
+# how many are higher/lower? does not fix normalization
 
 in.z <- 0
 tuit.sub$in.z <- (tuit.sub$TUITIONFEE_IN - mean(tuit.sub$TUITIONFEE_IN, na.rm=TRUE)) / sd(tuit.sub$TUITIONFEE_IN, na.rm=TRUE)
@@ -71,7 +71,7 @@ densityplot(tuit.sub$out.z)
 tuit.sub$comb.z <- tuit.sub$in.z + tuit.sub$out.z
 comb.z <- 0
 tuit.sub[order(tuit.sub$comb.z ),]
-# still skewed
+# skew still visible
 
 
 tuit.sub <- tuit.sub[,1:4]
