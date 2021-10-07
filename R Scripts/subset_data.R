@@ -29,3 +29,13 @@ subset.data <- function(csb.data, size=1000, seed=NULL, ...){
   
   return( csb.data[rows.idx, cols.idx] )
 }
+
+csb.2021 <- csb21.sub
+
+col.idx <- c(which(colnames(csb.2021)=="MN_EARN_WNE_P10"):
+               which(colnames(csb.2021)=="GT_25K_P9"), grep("PCIP", colnames(csb.2021)), which(colnames(csb.2021)=="NPT4_PUB"):which(colnames(csb.2021)=="TUITIONFEE_PROG"))
+csb21.sub <- csb.2021[,col.idx]
+
+tuit.idx <- which(colnames(csb21.sub)=="COSTT4_A"):which(colnames(csb21.sub)=="TUITIONFEE_OUT")
+
+tuit.sub <- csb21.sub[,tuit.idx]
