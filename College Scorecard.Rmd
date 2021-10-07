@@ -9,10 +9,11 @@ editor_options:
   chunk_output_type: inline
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(mosaic)
+library(reshape)
 ```
 
 ## Directories
@@ -30,6 +31,26 @@ source(file.path(rscripts, "subset_data.R"))
 csb21.sub <- subset.data(read.csv("Most-Recent-Cohorts-All-Data-Elements.csv", na.strings = c("NA", "PrivacySuppressed", "NULL")), seed=1234)
 print(paste("Subsetted data has", dim(csb21.sub), c("rows", "columns")))
 ```
+
+## Earnings Variable
+
+```{r}
+earnings.sub <- csb21.sub[,earnings.idx(csb21.sub)]
+
+unlist(lapply(earnings.sub, function(x){
+  1 - (sum(is.na(x)) / length(x))
+}))
+
+mean.sub <- melt(earnings.sub[c(1:3)])
+ggplot(mean.sub, aes(x=variable, y=value, fill=variable)) + geom_violin(na.rm = T) + scale_y_log10() + geom_boxplot(width=0.2) + labs(x="Year", y="Earnings", title = "Mean Earnings") + theme(axis.text.x = element_blank())
+
+median.sub <- melt(earnings.sub[c(4:6)])
+ggplot(median.sub, aes(x=variable, y=value, fill=variable)) + geom_violin(na.rm = T) + scale_y_log10() + geom_boxplot(width=0.2) + labs(x="Year", y="Earnings", title = "Median Earnings") + theme(axis.text.x = element_blank())
+
+sd.sub <- melt(earnings.sub[c(7:9)])
+ggplot(mean.sub, aes(x=variable, y=value, fill=variable)) + geom_violin(na.rm = T) + scale_y_log10() + geom_boxplot(width=0.2) + labs(x="Year", y="Earnings", title = "Standard Earnings") + theme(axis.text.x = element_blank())
+```
+
 
 ## Tuition Variable
 
