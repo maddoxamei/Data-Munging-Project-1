@@ -4,7 +4,7 @@ earnings.idx <- function(csb.data, reduced=TRUE){
   else{
     earn.mean <- grep('MN_EARN_WNE_P[10,8,6]', colnames(csb.data))
     earn.med <- grep('MD_EARN_WNE_P[10,8,6]', colnames(csb.data))
-    earn.p <- grep('PCT[0-9]._EARN_WNE_P[10,8,6]', colnames(csb.data))
+    #earn.p <- grep('PCT[0-9]._EARN_WNE_P[10,8,6]', colnames(csb.data))
     earn.sd <- grep('SD_EARN_WNE_P[10,8,6]', colnames(csb.data))
     return( c(earn.mean, earn.med, earn.p, earn.sd) )
   }
