@@ -35,6 +35,7 @@ print(paste("Subsetted data has", dim(csb21.sub), c("rows", "columns")))
 ## Tuition Variable
 
 ````{r}
+tuit.sub <- tuit.sub %>% tibble %>% mutate_all(as.numeric)
 
 # NA check
   na.max <- 0.5
@@ -45,9 +46,6 @@ print(paste("Subsetted data has", dim(csb21.sub), c("rows", "columns")))
   na.prop > na.max
   # all are less than 50% NAs except program year cost   # when using 50% NAs as NA max
   na.prop[na.prop > na.max]
-  
-  # Table of # of NAs & total # of obs.
-list(NAs.col1 = sum(is.na(tuit.sub[,1])), NAs.col2 = sum(is.na(tuit.sub[,2])), NAs.col3 = sum(is.na(tuit.sub[,3])), NAs.col4 = sum(is.na(tuit.sub[,4])), Total = nrow(tuit.sub))
   
 # Favstats - mean, sd, quartiles, sample size, # of NAs
 favstats(tuit.sub$COSTT4_A, na.rm=TRUE)
