@@ -11,6 +11,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
 ```
 
 ## Directories
@@ -25,16 +26,16 @@ rscripts <- "R Scripts"
 
 ```{r}
 source(file.path(rscripts, "subset_data.R"))
-csb21.sub <- subset.data(read.csv("Most-Recent-Cohorts-All-Data-Elements.csv"), seed=1234)
+
+csb21.sub <- subset.data(read.csv("Most-Recent-Cohorts-All-Data-Elements.csv", na.strings = c("NA", "PrivacySuppressed")), seed=1234)
 print(paste("Subsetted data has", dim(csb21.sub), c("rows", "columns")))
 ```
-
-
 ## Including Plots
 
 You can also embed plots, for example:
 
 ```{r, echo=FALSE}
+
 plot(pressure)
 ```
 
