@@ -12,6 +12,7 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
+library(mosaic)
 ```
 
 ## Directories
@@ -30,6 +31,88 @@ source(file.path(rscripts, "subset_data.R"))
 csb21.sub <- subset.data(read.csv("Most-Recent-Cohorts-All-Data-Elements.csv", na.strings = c("NA", "PrivacySuppressed")), seed=1234)
 print(paste("Subsetted data has", dim(csb21.sub), c("rows", "columns")))
 ```
+
+## Tuition Variable
+
+````{r}
+csb.2021 <- csb21.sub
+
+col.ind <- c(which(colnames(csb.2021)=="MN_EARN_WNE_P10"):
+which(colnames(csb.2021)=="GT_25K_P9"), grep("PCIP", colnames(csb.2021)), which(colnames(csb.2021)=="NPT4_PUB"):which(colnames(csb.2021)=="TUITIONFEE_PROG"))
+csb21.sub <- csb.2021[,col.ind]
+
+tuit.idx <- which(colnames(csb21.sub)=="COSTT4_A"):which(colnames(csb21.sub)=="TUITIONFEE_OUT")
+
+tuit.sub <- csb21.sub[,tuit.idx]
+
+
+# NA check
+  na.max <- 0.5
+  
+  na.prop <- apply(tuit.sub, 2, function(x) sum(is.na(x)/length(x)) )
+  na.prop
+  # amount of NAs greater than NA max?
+  na.prop > na.max
+  # all are less than 50% NAs except program year cost   # when using 50% NAs as NA max
+  na.prop[na.prop > na.max]
+  
+  # Table of # of NAs & total # of obs.
+list(NAs.col1 = sum(is.na(tuit.sub[,1])), NAs.col2 = sum(is.na(tuit.sub[,2])), NAs.col3 = sum(is.na(tuit.sub[,3])), NAs.col4 = sum(is.na(tuit.sub[,4])), Total = nrow(tuit.sub))
+  
+# Favstats - mean, sd, quartiles, sample size, # of NAs
+favstats(tuit.sub$COSTT4_A, na.rm=TRUE)
+favstats(tuit.sub$COSTT4_P, na.rm=TRUE)
+favstats(tuit.sub$TUITIONFEE_IN, na.rm=TRUE)
+favstats(tuit.sub$TUITIONFEE_OUT, na.rm=TRUE)
+
+# Checking Normality
+
+densityplot(tuit.sub$COSTT4_A) #Right skewed
+densityplot(tuit.sub$COSTT4_P) #Approx normal, some right skew
+densityplot(tuit.sub$TUITIONFEE_IN) #Right skewed
+densityplot(tuit.sub$TUITIONFEE_OUT) #Right skewed
+
+# Calculating Z-scores for non-normality
+# on pop parameter not sample
+
+in.z <- 0
+tuit.sub$in.z <- (tuit.sub$TUITIONFEE_IN - mean(tuit.sub$TUITIONFEE_IN, na.rm=TRUE)) / sd(tuit.sub$TUITIONFEE_IN, na.rm=TRUE)
+densityplot(tuit.sub$in.z)
+out.z <- 0
+tuit.sub$out.z <- (tuit.sub$TUITIONFEE_OUT - mean(tuit.sub$TUITIONFEE_OUT, na.rm=TRUE)) / sd(tuit.sub$TUITIONFEE_OUT, na.rm=TRUE)
+densityplot(tuit.sub$out.z)
+tuit.sub$comb.z <- tuit.sub$in.z + tuit.sub$out.z
+comb.z <- 0
+tuit.sub[order(tuit.sub$comb.z ),]
+# still skewed
+
+
+tuit.sub <- tuit.sub[,1:4]
+plot(tuit.sub, col = "blue", cex = 0.3 )
+# cost program year has no overlapping values with other variables (NAs)
+
+boxplot(tuit.sub, xlab = "Type of Tuition", ylab = "Tuition Cost in Dollars", names = c("Academic Year", "Program Year", "In State", "Out of State"), col = c("light blue", "pink ", "light green", "tan"), )
+
+# Focusing on Tuition In & Out of State Variables
+# csb21.sub
+# Mean earnings 10 years after
+plot(csb21.sub$MN_EARN_WNE_P10 ~ tuit.sub$TUITIONFEE_IN, col = "navy",cex = 0.5)
+#Median 10 years after
+plot(csb21.sub$MD_EARN_WNE_P10 ~ tuit.sub$TUITIONFEE_OUT, col = "turquoise", cex = 0.5)
+#SD 10 years 
+plot(csb21.sub$SD_EARN_WNE_P10 ~ tuit.sub$TUITIONFEE_OUT, col = "red", cex = 0.5)
+
+#Do Tuition Fee In or Out of State have a relationship with Median Earnings after 10 years? (using median bc of skew)
+
+str(csb.2021$MD_EARN_WNE_P10)
+str(tuit.sub$TUITIONFEE_IN)
+
+t.test(as.integer(csb21.sub$MD_EARN_WNE_P10), tuit.sub$TUITIONFEE_IN)
+t.test(as.integer(csb21.sub$MD_EARN_WNE_P10), tuit.sub$TUITIONFEE_OUT)
+#approx 0 p-value for both test
+```
+
+
 ## Including Plots
 
 You can also embed plots, for example:
