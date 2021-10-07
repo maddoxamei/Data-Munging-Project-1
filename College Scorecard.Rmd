@@ -27,15 +27,14 @@ rscripts <- "R Scripts"
 
 ```{r}
 source(file.path(rscripts, "subset_data.R"))
-
-csb21.sub <- subset.data(read.csv("Most-Recent-Cohorts-All-Data-Elements.csv", na.strings = c("NA", "PrivacySuppressed")), seed=1234)
+csb21.sub <- subset.data(read.csv("Most-Recent-Cohorts-All-Data-Elements.csv", na.strings = c("NA", "PrivacySuppressed", "NULL")), seed=1234)
 print(paste("Subsetted data has", dim(csb21.sub), c("rows", "columns")))
 ```
 
 ## Tuition Variable
 
 ````{r}
-tuit.sub <- tuit.sub %>% tibble %>% mutate_all(as.numeric)
+tuit.sub <- csb21.sub[,tuition.idx(csb21.sub)]
 
 # NA check
   na.max <- 0.5
