@@ -76,7 +76,7 @@ tuit.sub[order(tuit.sub$comb.z ),]
 
 tuit.sub <- tuit.sub[,1:4]
 plot(tuit.sub, col = "blue", cex = 0.3 )
-# cost program year has no overlapping values with other variables (NAs)
+# tuition program year variable has no overlapping values with other variables (NAs)
 
 boxplot(tuit.sub, xlab = "Type of Tuition", ylab = "Tuition Cost in Dollars", names = c("Academic Year", "Program Year", "In State", "Out of State"), col = c("light blue", "pink ", "light green", "tan"))
 
@@ -100,13 +100,3 @@ t.test(as.integer(csb21.sub$MD_EARN_WNE_P10), csb21.sub$TUITIONFEE_OUT)
 ```
 
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
