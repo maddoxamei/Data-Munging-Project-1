@@ -79,24 +79,24 @@ tuit.sub <- tuit.sub[,1:4]
 plot(tuit.sub, col = "blue", cex = 0.3 )
 # cost program year has no overlapping values with other variables (NAs)
 
-boxplot(tuit.sub, xlab = "Type of Tuition", ylab = "Tuition Cost in Dollars", names = c("Academic Year", "Program Year", "In State", "Out of State"), col = c("light blue", "pink ", "light green", "tan"), )
+boxplot(tuit.sub, xlab = "Type of Tuition", ylab = "Tuition Cost in Dollars", names = c("Academic Year", "Program Year", "In State", "Out of State"), col = c("light blue", "pink ", "light green", "tan"))
 
 # Focusing on Tuition In & Out of State Variables
 # csb21.sub
 # Mean earnings 10 years after
-plot(csb21.sub$MN_EARN_WNE_P10 ~ tuit.sub$TUITIONFEE_IN, col = "navy",cex = 0.5)
+plot(csb21.sub$MN_EARN_WNE_P10 ~ csb21.sub$TUITIONFEE_IN, col = "navy",cex = 0.5)
 #Median 10 years after
-plot(csb21.sub$MD_EARN_WNE_P10 ~ tuit.sub$TUITIONFEE_OUT, col = "turquoise", cex = 0.5)
+plot(csb21.sub$MD_EARN_WNE_P10 ~ csb21.sub$TUITIONFEE_OUT, col = "dark green", cex = 0.5)
 #SD 10 years 
-plot(csb21.sub$SD_EARN_WNE_P10 ~ tuit.sub$TUITIONFEE_OUT, col = "red", cex = 0.5)
+plot(csb21.sub$SD_EARN_WNE_P10 ~ csb21.sub$TUITIONFEE_OUT, col = "red", cex = 0.5)
 
 #Do Tuition Fee In or Out of State have a relationship with Median Earnings after 10 years? (using median bc of skew)
 
 str(csb.2021$MD_EARN_WNE_P10)
-str(tuit.sub$TUITIONFEE_IN)
+str(csb21.sub$TUITIONFEE_IN)
 
-t.test(as.integer(csb21.sub$MD_EARN_WNE_P10), tuit.sub$TUITIONFEE_IN)
-t.test(as.integer(csb21.sub$MD_EARN_WNE_P10), tuit.sub$TUITIONFEE_OUT)
+t.test(as.integer(csb21.sub$MD_EARN_WNE_P10), csb21.sub$TUITIONFEE_IN)
+t.test(as.integer(csb21.sub$MD_EARN_WNE_P10), csb21.sub$TUITIONFEE_OUT)
 #approx 0 p-value for both test
 ```
 
