@@ -1,6 +1,0 @@
-csb.2021 <- read.csv("~/Downloads/CollegeScorecard_Raw_Data_08032021-1/Most-Recent-Cohorts-All-Data-Elements.csv")
-col.ind <- c(which(colnames(csb.2021)=="MN_EARN_WNE_P10"):
-which(colnames(csb.2021)=="GT_25K_P9"), grep("PCIP", colnames(csb.2021)), which(colnames(csb.2021)=="NPT4_PUB"):which(colnames(csb.2021)=="TUITIONFEE_PROG"))
-col.ind
-
-csb21.sub <- csb.2021[,col.ind]
