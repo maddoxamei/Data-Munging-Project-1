@@ -19,7 +19,7 @@ library(reshape)
 ## Directories
 
 ```{r}
-rscripts <- "R/scripts"
+rscripts <- "scripts"
 ```
 
 ## Dataset Preprocessing

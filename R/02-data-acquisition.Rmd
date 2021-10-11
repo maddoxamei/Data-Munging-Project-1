@@ -1,3 +1,45 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Data Acquisition
+
+> R wrapper for U.S. Department of Education College Scorecard Data API
+>
+> - Benjamin Skinner (package author)
+
+```{r eval=FALSE}
+install.packages("rscorecard")
+```
+
+```{r echo=FALSE}
+library(rscorecard)
+APIKey <- read.table("../api_key.txt", sep="")[1,1]
+sc_key(APIKey)
+```
+```{r include = FALSE, echo=FALSE}
+# F_latest <- sc_init() %>%
+#     sc_filter(ccbasic %in% c(24:32)) %>%
+#     sc_select(unitid, ccbasic, instnm, unemp_rate, sc_dict('MN_EARN_WNE_P[10,8,6]')) %>% 
+#     sc_year("latest") %>% 
+#     sc_get()
+```
+
+
+```{r echo=FALSE}
+
+# Grab the institution data dictionary information
+csb.fields <- sc_dict('.', limit = Inf, print_off = TRUE, return_df = TRUE)
+
+# Extract the relevant columns
+rows.idx <- c(earnings.idx(csb.fields$varname), tuition.idx(csb.fields$varname)) 
+
+# Provide a searchable table widget which provides explanations for all relevant columns
+DT::datatable(csb.fields[rows.idx, c("varname","description","dev_category")])
+
+#DT::datatable(csb.fields[,"c"])
+```
+
 
 
