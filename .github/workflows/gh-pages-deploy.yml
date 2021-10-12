@@ -9,7 +9,11 @@ jobs:
     runs-on: ubuntu-latest    
     steps:
     - uses: actions/checkout@master
-    - name: Build Book
+    - uses: r-lib/actions/setup-r@v1
+    - uses: r-lib/actions/setup-pandoc@v1
+    - name: Install rmarkdown
+      run: Rscript -e 'install.packages(c("rmarkdown","bookdown"))'
+    - name: Render Book
       run: |
         chmod +x ./_build.sh
         ./_build.sh
