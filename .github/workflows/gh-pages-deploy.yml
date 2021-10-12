@@ -11,8 +11,13 @@ jobs:
     - uses: actions/checkout@master
     - uses: r-lib/actions/setup-r@v1
     - uses: r-lib/actions/setup-pandoc@v1
-    - name: Install rmarkdown
-      run: Rscript -e 'install.packages(c("rmarkdown","bookdown"))'
+    
+    - name: Install Dependencies
+    - uses: r-lib/actions/setup-r-dependencies@v1
+      with:
+        needs: |
+          Imports
+    
     - name: Render Book
       run: |
         chmod +x ./_build.sh
