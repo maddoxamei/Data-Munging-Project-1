@@ -1,3 +1,7 @@
+# Preface {-}
+
+This project was completed in accordance with the requirements for the Applied Data Science course in the Data Science Masters program at New College of Florida.
+
 # Introduction {-}
 
 ## The Dataset

@@ -2,44 +2,81 @@
 output:
   pdf_document: default
   html_document: default
+editor_options: 
+  chunk_output_type: console
 ---
 # Data Acquisition
 
-> R wrapper for U.S. Department of Education College Scorecard Data API
->
-> - Benjamin Skinner (package author)
+```{r include=FALSE}
+source(file.path("R/scripts", "subset_data.R"))
+```
+As opposed to downloading large csv datasets, we decided to use rscorcard to retrieve only the relevant information. rscorecard is a R wrapper for U.S. Department of Education College Scorecard Data API which allows for the remotly access and download the Department of Education's College Scorecard data. It is based on the 'dplyr' model of piped commands to select and filter data in a single chained function call. 
+
+This package can installed in RStudio by running the command `install.packages("rscorecard")` in the console.
+```{r include=FALSE}
+APIKey <- read.table("api_key.txt", sep="")[1,1]
+```
+
+Merely loading the package is not enough to use its functions. In order to communicate with the server which hosts the data, an API key from the U.S. Department of Education is required. This key acts as an authentication tool.
 
 ```{r eval=FALSE}
-install.packages("rscorecard")
+rscorecard::sc_key(APIKey)
 ```
 
-```{r echo=FALSE}
-library(rscorecard)
-APIKey <- read.table("../api_key.txt", sep="")[1,1]
-sc_key(APIKey)
-```
-```{r include = FALSE, echo=FALSE}
-# F_latest <- sc_init() %>%
-#     sc_filter(ccbasic %in% c(24:32)) %>%
-#     sc_select(unitid, ccbasic, instnm, unemp_rate, sc_dict('MN_EARN_WNE_P[10,8,6]')) %>% 
-#     sc_year("latest") %>% 
-#     sc_get()
-```
-
-
-```{r echo=FALSE}
-
+Our group was interested in the relationship between tuition cost and earnings after graduation across different academic fields. Although there were fields which recorded the proportion of degrees recieved in specific fields, these fields were not well standardized (i.e. "Engineering" vs. "Engineering or related fields"). Therefore, we decided to use school type instead. Table \@ref(tab:school) provides a list of the school types as classified by the Carnegie method that we included in our dataset.
+```{r include=FALSE}
 # Grab the institution data dictionary information
-csb.fields <- sc_dict('.', limit = Inf, print_off = TRUE, return_df = TRUE)
+csb.fields <- rscorecard::sc_dict('.', limit = Inf, print_off = TRUE, return_df = TRUE)
 
-# Extract the relevant columns
-rows.idx <- c(earnings.idx(csb.fields$varname), tuition.idx(csb.fields$varname)) 
-
-# Provide a searchable table widget which provides explanations for all relevant columns
-DT::datatable(csb.fields[rows.idx, c("varname","description","dev_category")])
-
-#DT::datatable(csb.fields[,"c"])
+# Extract the relevant values (school classifications) in the ccbasic column
+ccbasic.labels <- csb.fields[schools.idx(csb.fields$label), c("value", "label")]
 ```
 
+```{r school, echo=FALSE}
+knitr::kable(
+  ccbasic.labels, booktabs = TRUE,
+  caption = 'School classifications considered in our analysis.'
+)
+```
 
+The specific earnings and tuition variables we considered are located in \@ref(tab:features)
+```{r include=FALSE}
+rows.idx <- c(tuition.idx(csb.fields$varname),
+                      earnings.idx(csb.fields$varname))
+```
 
+```{r features, results="asis", echo=FALSE}
+if( knitr::is_html_output(excludes = "markdown") ){
+  
+  cat("<table>",paste0("<caption>", "(#tab:features)", "Specific earnings and tuition variables considered in our analysis.", "</caption>"),"</table>", sep ="\n")
+  
+  # Provide a searchable table widget which provides explanations for all relevant columns
+  DT::datatable( csb.fields[rows.idx,
+                            c("varname",
+                              "description","dev_category")], 
+                rownames = F, 
+                options = list(pageLength=5, 
+                               lengthMenu=c(5, -1)))
+
+} else {
+  knitr::kable(
+    csb.fields[rows.idx,
+               c("varname", "description","dev_category")],
+    booktabs = TRUE,
+    caption = 'Specific earnings and tuition variables considered in our analysis..'
+  )
+}
+```
+
+Data is obtained through a series of piped functions: `sc_init()`, `sc_filter()`, `sc_select()`, `sc_year()`, and `sc_get()`. Unfortunately, the `sc_year()` function can only take a single-year entry. To simplify the process of grabbing the same data over the course of several years, a simple function was created. The `years` vector allows the specification of which years to pull data from.
+```{r include=FALSE}
+# Condense releveant information into one vector
+vars_to_pull <- c('unitid', 'instnm', 'ccbasic',
+                  csb.fields$varname[rows.idx] )
+```
+
+```{r eval=FALSE}
+years <- c(1900:1999)
+years <- c(2000:as.numeric(format(Sys.Date(), "%Y")))
+csb.data <- dplyr::bind_rows( lapply(years, get.data, vars_to_pull) )
+```

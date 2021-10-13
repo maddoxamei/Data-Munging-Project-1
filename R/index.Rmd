@@ -15,15 +15,9 @@ editor_options:
   chunk_output_type: inline
 ---
 
-# Preface {-}
-
-This project was completed in accordance with the requirements for the Applied Data Science course in the Data Science Masters program at New College of Florida.
-
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
   .packages(), 'bookdown', 'knitr', 'rmarkdown'
 ), 'packages.bib')
-
-x <- .packages()
 ```

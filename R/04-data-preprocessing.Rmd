@@ -1,2 +1,102 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Data Preprocessing
 
+The raw data we are working with has `r nrow(csb.data)` rows and `r ncol(csb.data)` columns. A sample of this data is provided below in table \@ref(tab:sampledata). Originally, the `ccbasic` (school type) column is an integer. Although the values are integers, they represent categories. Therefore, they must be converted into factors. Factors are R's equivalent categorical variables. They are treated differently than normal characters. On that note, the `unitid` is also changed so that the id is treated as an object an not a descrete value. The original data types and altered types of the columns can be found in table \@ref(tab:coldatatypes).
+```{r sampledata, echo=FALSE}
+knitr::kable(
+    head(csb.data),
+    booktabs = TRUE,
+    caption = 'Column Types'
+  )
+```
+
+```{r include=FALSE}
+source(file.path("R/scripts", "highcharter.R"))
+features <- as.data.frame(sapply(csb.data, class))
+colnames(features) <- "original"
+
+# Convert columns
+csb.data$unitid <- as.character(csb.data$unitid)
+
+# Convert the two numerically represented categorical variables into factors
+csb.data$ccbasic <- as.factor(csb.data$ccbasic)
+# Re-assign levels to condensed versions of the labels
+levels(csb.data$ccbasic) <- gsub(".*: ", "", ccbasic.labels$label)
+
+features$altered <- ifelse(features$original == sapply(csb.data, class), yes=NA, no=sapply(csb.data, class))
+```
+
+```{r}
+ggplot2::ggplot(data = csb.data, ggplot2::aes(x = ccbasic, fill = as.factor(year))) + ggplot2::geom_bar(position = "dodge") + ggplot2::labs(x = "School Type", title = "Distribution of Schools") + ggplot2::coord_flip() + ggplot2::scale_fill_discrete(name="Year")
+```
+
+```{r include = FALSE}
+csb.data.unitid <- csb.data %>% dplyr::group_by(unitid, ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T))))
+
+csb.data.year.ccbasic <- csb.data %>% dplyr::group_by(year, ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T), sd=~sd(.x, na.rm=T))))
+```
+
+```{r echo=FALSE}
+hc <- highcharter::hchart(
+  csb.data.year.ccbasic, "line", 
+  highcharter::hcaes(year, tuitionfee_in_mean, group = ccbasic) )
+
+hc.line(hc, "Year", "In-State Tuition")
+```
+
+```{r echo=FALSE}
+hc <- highcharter::hchart(
+  csb.data.unitid, "scatter", highcharter::hcaes(tuitionfee_in_mean, 
+                                    mn_earn_wne_p10_mean, 
+                                    z = sd_earn_wne_p10_mean, 
+                                    group = ccbasic))
+hc.scatter(hc, "In-State Tuition",
+           "Mean Earnings in 10 Years","drat", 
+           ymax=150000, ybands=income.brackets)
+```
+
+```{r}
+x <- split(csb.data.year.ccbasic, csb.data.year.ccbasic$year)
+hc1 <- highcharter::hchart(
+  x[[1]], "scatter", highcharter::hcaes(tuitionfee_in_mean, 
+                                    mn_earn_wne_p10_mean, 
+                                    z = sd_earn_wne_p10_mean,
+                           group=ccbasic))
+hc2 <- highcharter::hchart(
+  x[[2]], "scatter", highcharter::hcaes(tuitionfee_in_mean, 
+                                    mn_earn_wne_p10_mean, 
+                                    z = sd_earn_wne_p10_mean,
+                                    group = ccbasic))
+```
+
+```{r}
+q <- csb.data %>% group_by(year) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T))))
+```
+
+
+
+```{r schoolsummary, results="asis", echo=FALSE}
+if( knitr::is_html_output(excludes = "markdown") ){
+  
+  cat("<table>",paste0("<caption>", "(#tab:schoolsummary)", "Specific earnings and tuition variables considered in our analysis.", "</caption>"),"</table>", sep ="\n")
+  
+  # Provide a searchable table widget which provides explanations for all relevant columns
+  DT::datatable( round(bind_cols(table(csb.data$ccbasic), prop.table(table(csb.data$ccbasic))), 4), 
+                rownames = , 
+                colnames = c("Frequency", "Proportion"),
+                options = list(pageLength=5, 
+                               lengthMenu=c(5, -1)))
+
+} else {
+  knitr::kable(
+    csb.fields[rows.idx,
+               c("varname", "description","dev_category")],
+    booktabs = TRUE,
+    caption = 'Specific earnings and tuition variables considered in our analysis..'
+  )
+}
+```

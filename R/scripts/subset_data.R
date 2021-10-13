@@ -21,9 +21,22 @@ tuition.idx <- function(csb.names){
   return( c(which(csb.names=="COSTT4_A"):which(csb.names=="TUITIONFEE_OUT")) )
 }
 
+schools.idx <- function(csb.names){
+  return( grep('Special Focus Four-Year', csb.names) )
+}
+
 sample.data <- function(csb.data, size=1000, seed=NULL){
   if( !is.null(seed) ) set.seed(seed)
   return( csb.data[sample(nrow(csb.data), size),] )
+}
+
+get.data <- function(year, vars.vector){
+  print(paste("Grabbing data for",year))
+  rscorecard::sc_init() %>%
+    rscorecard::sc_filter(ccbasic %in% c(24:32)) %>%
+    rscorecard::sc_select_(vars.vector) %>%
+    rscorecard::sc_year(year) %>%
+    rscorecard::sc_get()
 }
 
 subset.data <- function(csb.data, size=1000, seed=NULL, ...){
