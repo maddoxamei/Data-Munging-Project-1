@@ -22,8 +22,6 @@ plot.jitter <- function(data, scatter.hcaes, boxdata){
     hc_tooltip(pointFormat='{series.yAxis.axisTitle.textStr}: {point.y}')
   return(hc)
 }
-# plot.density(iris, hcaes(x=Species, y=Sepal.Length, group=Species),
-#              data_to_boxplot(iris, Sepal.Length, Species))
 
 plot.violin <- function(data, var, group, boxdata){
   ds <- NULL
@@ -57,9 +55,6 @@ plot.violin <- function(data, var, group, boxdata){
   return(hc)
 }
 
-# plot.violin(iris, "Sepal.Length", "Species",
-#                    data_to_boxplot(iris, Sepal.Length, Species))
-
 plot.violin.jitter <- function(data, var, group, boxdata, scatter.hcaes){
   hc <- plot.violin(data, var, group, boxdata) %>%
     hc_add_series(data = data, scatter.hcaes,
@@ -74,10 +69,6 @@ plot.violin.jitter <- function(data, var, group, boxdata, scatter.hcaes){
     hc_plotOptions(scatter = list(jitter = list(x = .1, y = 0)))
   return(hc)
 }
-
-# plot.violin.jitter(iris, "Sepal.Length", "Species",
-#             data_to_boxplot(iris, Sepal.Length, Species),
-#             hcaes(x=Species, y=Sepal.Length, group=Species))
 
 hc.label <- function(hc, xlab, ylab,
                      title=NULL, subtitle=NULL){

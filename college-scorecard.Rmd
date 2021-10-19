@@ -1,0 +1,269 @@
+# Preface {-}
+
+This project was completed in accordance with the requirements for the Applied Data Science course in the Data Science Masters program at New College of Florida.
+
+
+```{r include=FALSE}
+# Grabs all R scripts in the project directory
+rscripts <- list.files(pattern = !".R$", recursive = TRUE)
+
+# Only imports R scripts which do not lead with an underscore
+for (file in grep("/_", rscripts, invert=T, value=T)) {
+  source(file, local = knitr::knit_global())
+}
+```
+
+# Introduction {-}
+
+## The Dataset
+
+## The project
+
+
+<!--chapter:end:R/01-intro.Rmd-->
+
+---
+output:
+  pdf_document: default
+  html_document: default
+editor_options: 
+  chunk_output_type: console
+---
+# Data Acquisition
+
+## Initial Acquisition
+
+As opposed to downloading large csv datasets, we decided to use rscorcard to retrieve only the relevant information. rscorecard is a R wrapper for U.S. Department of Education College Scorecard Data API which allows for the remotly access and download the Department of Education's College Scorecard data. It is based on the 'dplyr' model of piped commands to select and filter data in a single chained function call. 
+
+This package can installed in RStudio by running the command `install.packages("rscorecard")` in the console.
+
+Merely loading the package is not enough to use its functions. In order to communicate with the server which hosts the data, an API key from the U.S. Department of Education is required. This key acts as an authentication tool.
+
+```{r eval=FALSE}
+rscorecard::sc_key(APIKey)
+```
+
+Our group was interested in the relationship between tuition cost and earnings after graduation across different academic fields. Although there were fields which recorded the proportion of degrees recieved in specific fields, these fields were not well standardized (i.e. "Engineering" vs. "Engineering or related fields"). Therefore, we decided to use school type instead. Table \@ref(tab:school) provides a list of the school types as classified by the Carnegie method that we included in our dataset.
+
+```{r school, echo=FALSE}
+knitr::kable(
+  ccbasic.labels, booktabs = TRUE,
+  caption = 'School classifications considered in our analysis.'
+)
+```
+
+The specific earnings and tuition variables we considered are located in \@ref(tab:features)
+
+```{r features, results="asis", echo=FALSE}
+if( knitr::is_html_output(excludes = "markdown") ){
+  
+  cat("<table>",paste0("<caption>", "(#tab:features)", "Specific earnings and tuition variables considered in our analysis.", "</caption>"),"</table>", sep ="\n")
+  
+  # Provide a searchable table widget which provides explanations for all relevant columns
+  DT::datatable( csb.fields[c(tuition.idx(csb.fields$varname),
+                                  earnings.idx(csb.fields$varname)),
+                            c("varname",
+                              "description","dev_category")], 
+                rownames = F, 
+                options = list(pageLength=5, 
+                               lengthMenu=c(5, -1)))
+
+} else {
+  knitr::kable(
+    csb.fields[c(tuition.idx(csb.fields$varname),
+                                  earnings.idx(csb.fields$varname)),
+               c("varname", "description","dev_category")],
+    booktabs = TRUE,
+    caption = 'Specific earnings and tuition variables considered in our analysis..'
+  )
+}
+```
+
+Data is obtained through a series of piped functions: `sc_init()`, `sc_filter()`, `sc_select()`, `sc_year()`, and `sc_get()`. Unfortunately, the `sc_year()` function can only take a single-year entry. To simplify the process of grabbing the same data over the course of several years, a simple function was created. 
+
+```{r eval=FALSE}
+get.data <- function(year, vars.vector){
+  print(paste("Grabbing data for",year))
+  rscorecard::sc_init() %>%
+    rscorecard::sc_filter(ccbasic %in% c(24:32)) %>%
+    rscorecard::sc_select_(vars.vector) %>%
+    rscorecard::sc_year(year) %>%
+    rscorecard::sc_get()
+}
+```
+
+As mentioned earlier, the data collection began back in the 1900's. As it turns out, the variables of interest to our group, earnings later in life and tuition, were not recorded until 2000. Therefore, the earlier years are excluded from our analysis.
+
+```{r eval=FALSE}
+years <- c(2000:as.numeric(format(Sys.Date(), "%Y")))
+csb.data <- dplyr::bind_rows( lapply(years, get.data, vars_to_pull) )
+```
+
+## Continual Aquisition
+
+The server which hosts the college data only allows up to 100 calls at a given time. Due to the use of Github Actions to automatically re-render the report after any changes pushed to the main branch, this access limitation makes it impractical for long-term data sourcing. Therefore, the compiled data was converted into a csv file and stored remotely in Google's cloud service (Google Drive) to facilitate unrestricted access to the data.
+
+```{r eval=FALSE}
+write.csv(csb.data, "CollegeScorecardData20to21.csv", row.names=F)
+```
+
+The data stored on Google Drive can henceforth be obtained through a download using the id of the file and the following Google address to access it.
+
+```{r}
+id <- "1Sfa6V3vhxQU3wDMTKsPUpnkp9DX8gsOK"
+csb.data <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id))
+```
+
+<!--chapter:end:R/02-data-acquisition.Rmd-->
+
+# Data Quality
+
+<!--chapter:end:R/03-data-quality.Rmd-->
+
+---
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+# Data Preprocessing
+
+The raw data we are working with has `r nrow(csb.data)` rows and `r ncol(csb.data)` columns. A sample of this data is provided below in table \@ref(tab:sampledata). 
+
+```{r sampledata, results="asis", echo=FALSE}
+if( knitr::is_html_output(excludes = "markdown") ){
+  
+  cat("<table>",paste0("<caption>", "(#tab:sampledata)", "Sample Data.", "</caption>"),"</table>", sep ="\n")
+  
+  # Provide a searchable table widget which provides explanations for all relevant columns
+  DT::datatable( head(csb.data), 
+                rownames = F, 
+                options = list(pageLength=3))
+
+} else {
+  knitr::kable(
+    head(csb.data),
+    booktabs = TRUE,
+    caption = 'Sample Data'
+  )
+}
+```
+
+Notice that the columns for the earnings table places the year subsets in the order of 10, 6 then 8. To ensure this ordering is not reflected in the later graphs, the column are renamed and then sorted alphebetically.
+
+```{r include = FALSE}
+features <- as.data.frame(sapply(csb.data, class))
+colnames(features) <- "original"
+
+csb.data %<>% tibble::as_tibble() %>% column.types() %>% column.reorder()
+```
+
+Originally, the `ccbasic` (school type) column is an integer. Although the values are integers, they represent categories. Therefore, they must be converted into factors. Factors are R's equivalent categorical variables. They are treated differently than normal characters. On that note, the `unitid` is also changed so that the id is treated as an object an not a descrete value. The original data types and altered types of the columns can be found in table \@ref(tab:featuretypes).
+
+```{r featuretypes, results="asis", echo=FALSE}
+features$altered <- ifelse(features$original == 
+                               sapply(csb.data, class), 
+                             yes=NA, no=sapply(csb.data, class))
+if( knitr::is_html_output(excludes = "markdown") ){
+  
+  cat("<table>",paste0("<caption>", "(#tab:featuretypes)", "Feature Types.", "</caption>"),"</table>", sep ="\n")
+  
+  # Provide a searchable table widget which provides explanations for all relevant columns
+  DT::datatable( features, 
+                rownames = F, 
+                options = list(pageLength=5, 
+                               lengthMenu=c(5, 10, -1)))
+
+} else {
+  knitr::kable(
+    features,
+    booktabs = TRUE,
+    caption = 'Specific earnings and tuition variables considered in our analysis..'
+  )
+}
+```
+
+<!--chapter:end:R/04-data-preprocessing.Rmd-->
+
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+# Descriptive Statistics
+```{r include=FALSE}
+csb.data.unitid <- csb.data %>% dplyr::group_by(unitid,instnm, ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T),sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
+
+csb.data.year.ccbasic <- csb.data %>% dplyr::group_by(year, ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T), sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
+csb.data.year.ccbasic$n <- csb.data %>% count(year, ccbasic)
+
+csb.data.ccbasic <- csb.data %>% dplyr::group_by(ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T), sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
+csb.data.ccbasic$n <- csb.data %>% count(ccbasic)
+```
+
+## School Type
+
+The number of schools for each category Figure \@ref(fig:schooldistribution) 
+
+```{r schooldistribution, fig.cap="School Distribution", echo=FALSE, warning=F}
+school.distribution()
+```
+
+## Earnings Variable
+
+```{r earningspercentiles, fig.cap="Percentiles of Earnings", echo=FALSE, warning=F}
+earnings.percentiles()
+```
+
+```{r earningssd, fig.cap="Standard Deviation of Earnigns", echo=FALSE, warning=F}
+earnings.sd()
+```
+
+## Cost Variable
+
+```{r tutionstream, fig.cap="Tuition Over the Years", echo=FALSE, warning=F}
+tuition.stream()
+```
+
+```{r coststream, fig.cap="Cost Over the Years", echo=FALSE, warning=F}
+cost.stream()
+```
+
+
+## Relationship Between Earnings and Cost
+
+```{r costtoearninst, fig.cap="Institution Cost to Earnings", echo=FALSE, warning=F}
+cost.to.earnings(csb.data.unitid, "{point.instnm}", "Averaged across all years")
+```
+
+```{r costtoearnyear, fig.cap="Yearly Cost to Earnings", echo=FALSE, warning=F}
+cost.to.earnings(csb.data.year.ccbasic, "{point.year}", "Averaged across all school types")
+```
+
+<!--chapter:end:R/05-descriptive-statistics.Rmd-->
+
+---
+title: "College Scorecard Report"
+author: "Mei Maddox, Mitchelle V., Conor Welsh"
+date: "Last Compiled on `r format(Sys.Date(), format='%b %d %Y')`"
+output:
+  bookdown::pdf_book: default
+  bookdown::gitbook: default
+  bookdown::epub_book: default
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [other.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+<!--chapter:end:R/index.Rmd-->
+
