@@ -18,37 +18,37 @@ csb.data.ccbasic$n <- csb.data %>% count(ccbasic)
 
 The number of schools for each category Figure \@ref(fig:schooldistribution) 
 
-```{r schooldistribution, fig.cap="School Distribution", echo=FALSE, warning=F, messages=F}
+```{r schooldistribution, fig.cap="School Distribution", echo=FALSE}
 school.distribution()
 ```
 
 ## Earnings Variable
 
-```{r earningspercentiles, fig.cap="Percentiles of Earnings", echo=FALSE, warning=F, messages=F}
+```{r earningspercentiles, fig.cap="Percentiles of Earnings", echo=F}
 earnings.percentiles()
 ```
 
-```{r earningssd, fig.cap="Standard Deviation of Earnigns", echo=FALSE, warning=F, messages=F}
+```{r earningssd, fig.cap="Standard Deviation of Earnigns", echo=F}
 earnings.sd()
 ```
 
 ## Cost Variable
 
-```{r tutionstream, fig.cap="Tuition Over the Years", echo=FALSE, warning=F, messages=F}
+```{r tutionstream, fig.cap="Tuition Over the Years", echo=F}
 tuition.stream()
 ```
 
-```{r coststream, fig.cap="Cost Over the Years", echo=FALSE, warning=F, messages=F}
+```{r coststream, fig.cap="Cost Over the Years", echo=F}
 cost.stream()
 ```
 
 
 ## Relationship Between Earnings and Cost
 
-```{r costtoearninst, fig.cap="Institution Cost to Earnings", echo=FALSE, warning=F, messages=F}
+```{r costtoearninst, fig.cap="Institution Cost to Earnings", echo=F}
 cost.to.earnings(csb.data.unitid, "{point.instnm}", "Averaged across all years")
 ```
 
-```{r costtoearnyear, fig.cap="Yearly Cost to Earnings", echo=FALSE, warning=F, messages=F}
+```{r costtoearnyear, fig.cap="Yearly Cost to Earnings", echo=F}
 cost.to.earnings(csb.data.year.ccbasic, "{point.year}", "Averaged across all school types")
 ```
