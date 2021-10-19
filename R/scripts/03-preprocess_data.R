@@ -12,8 +12,7 @@ column.types <- function(data){
 }
 
 
-
-ccolumn.reorder <- function(data){
+column.reorder <- function(data){
   print(colnames(data))
   colnames(data) <- gsub('([0-9]$)','0\\1',colnames(data))
   colnames(data) <- gsub('([0]$)','',colnames(data))

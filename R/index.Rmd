@@ -20,14 +20,4 @@ editor_options:
 knitr::write_bib(c(
   .packages(), 'bookdown', 'knitr', 'rmarkdown'
 ), 'packages.bib')
-
-# Import all R scripts in the project directory
-rscripts <- list.files(pattern = ".R$", recursive = TRUE)
-
-# Only imports R scripts which do not lead with an underscore
-for (file in grep("/_", rscripts, invert=T, value=T)) {
-  source(file, local = knitr::knit_global())
-}
-
-knitr::opts_chunk$set(message = F, warning = F, results = 'hide')
 ```
