@@ -1,0 +1,54 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+# Descriptive Statistics
+```{r include=FALSE}
+csb.data.unitid <- csb.data %>% dplyr::group_by(unitid,instnm, ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T),sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
+
+csb.data.year.ccbasic <- csb.data %>% dplyr::group_by(year, ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T), sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
+csb.data.year.ccbasic$n <- csb.data %>% count(year, ccbasic)
+
+csb.data.ccbasic <- csb.data %>% dplyr::group_by(ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T), sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
+csb.data.ccbasic$n <- csb.data %>% count(ccbasic)
+```
+
+## School Type
+
+The number of schools for each category Figure \@ref(fig:schooldistribution) 
+
+```{r schooldistribution, fig.cap="School Distribution", echo=FALSE, warning=F}
+school.distribution()
+```
+
+## Earnings Variable
+
+```{r earningspercentiles, fig.cap="Percentiles of Earnings", echo=FALSE, warning=F}
+earnings.percentiles()
+```
+
+```{r earningssd, fig.cap="Standard Deviation of Earnigns", echo=FALSE, warning=F}
+earnings.sd()
+```
+
+## Cost Variable
+
+```{r tutionstream, fig.cap="Tuition Over the Years", echo=FALSE, warning=F}
+tuition.stream()
+```
+
+```{r coststream, fig.cap="Cost Over the Years", echo=FALSE, warning=F}
+cost.stream()
+```
+
+
+## Relationship Between Earnings and Cost
+
+```{r costtoearninst, fig.cap="Institution Cost to Earnings", echo=FALSE, warning=F}
+cost.to.earnings(csb.data.unitid, "{point.instnm}", "Averaged across all years")
+```
+
+```{r costtoearnyear, fig.cap="Yearly Cost to Earnings", echo=FALSE, warning=F}
+cost.to.earnings(csb.data.year.ccbasic, "{point.year}", "Averaged across all school types")
+```

@@ -7,15 +7,11 @@ editor_options:
 ---
 # Data Acquisition
 
-```{r include=FALSE}
-source(file.path("R/scripts", "subset_data.R"))
-```
+## Initial Acquisition
+
 As opposed to downloading large csv datasets, we decided to use rscorcard to retrieve only the relevant information. rscorecard is a R wrapper for U.S. Department of Education College Scorecard Data API which allows for the remotly access and download the Department of Education's College Scorecard data. It is based on the 'dplyr' model of piped commands to select and filter data in a single chained function call. 
 
 This package can installed in RStudio by running the command `install.packages("rscorecard")` in the console.
-```{r include=FALSE}
-APIKey <- read.table("api_key.txt", sep="")[1,1]
-```
 
 Merely loading the package is not enough to use its functions. In order to communicate with the server which hosts the data, an API key from the U.S. Department of Education is required. This key acts as an authentication tool.
 
@@ -24,13 +20,6 @@ rscorecard::sc_key(APIKey)
 ```
 
 Our group was interested in the relationship between tuition cost and earnings after graduation across different academic fields. Although there were fields which recorded the proportion of degrees recieved in specific fields, these fields were not well standardized (i.e. "Engineering" vs. "Engineering or related fields"). Therefore, we decided to use school type instead. Table \@ref(tab:school) provides a list of the school types as classified by the Carnegie method that we included in our dataset.
-```{r include=FALSE}
-# Grab the institution data dictionary information
-csb.fields <- rscorecard::sc_dict('.', limit = Inf, print_off = TRUE, return_df = TRUE)
-
-# Extract the relevant values (school classifications) in the ccbasic column
-ccbasic.labels <- csb.fields[schools.idx(csb.fields$label), c("value", "label")]
-```
 
 ```{r school, echo=FALSE}
 knitr::kable(
@@ -40,10 +29,6 @@ knitr::kable(
 ```
 
 The specific earnings and tuition variables we considered are located in \@ref(tab:features)
-```{r include=FALSE}
-rows.idx <- c(tuition.idx(csb.fields$varname),
-                      earnings.idx(csb.fields$varname))
-```
 
 ```{r features, results="asis", echo=FALSE}
 if( knitr::is_html_output(excludes = "markdown") ){
@@ -51,7 +36,8 @@ if( knitr::is_html_output(excludes = "markdown") ){
   cat("<table>",paste0("<caption>", "(#tab:features)", "Specific earnings and tuition variables considered in our analysis.", "</caption>"),"</table>", sep ="\n")
   
   # Provide a searchable table widget which provides explanations for all relevant columns
-  DT::datatable( csb.fields[rows.idx,
+  DT::datatable( csb.fields[c(tuition.idx(csb.fields$varname),
+                                  earnings.idx(csb.fields$varname)),
                             c("varname",
                               "description","dev_category")], 
                 rownames = F, 
@@ -60,7 +46,8 @@ if( knitr::is_html_output(excludes = "markdown") ){
 
 } else {
   knitr::kable(
-    csb.fields[rows.idx,
+    csb.fields[c(tuition.idx(csb.fields$varname),
+                                  earnings.idx(csb.fields$varname)),
                c("varname", "description","dev_category")],
     booktabs = TRUE,
     caption = 'Specific earnings and tuition variables considered in our analysis..'
@@ -68,15 +55,37 @@ if( knitr::is_html_output(excludes = "markdown") ){
 }
 ```
 
-Data is obtained through a series of piped functions: `sc_init()`, `sc_filter()`, `sc_select()`, `sc_year()`, and `sc_get()`. Unfortunately, the `sc_year()` function can only take a single-year entry. To simplify the process of grabbing the same data over the course of several years, a simple function was created. The `years` vector allows the specification of which years to pull data from.
-```{r include=FALSE}
-# Condense releveant information into one vector
-vars_to_pull <- c('unitid', 'instnm', 'ccbasic',
-                  csb.fields$varname[rows.idx] )
-```
+Data is obtained through a series of piped functions: `sc_init()`, `sc_filter()`, `sc_select()`, `sc_year()`, and `sc_get()`. Unfortunately, the `sc_year()` function can only take a single-year entry. To simplify the process of grabbing the same data over the course of several years, a simple function was created. 
 
 ```{r eval=FALSE}
-years <- c(1900:1999)
+get.data <- function(year, vars.vector){
+  print(paste("Grabbing data for",year))
+  rscorecard::sc_init() %>%
+    rscorecard::sc_filter(ccbasic %in% c(24:32)) %>%
+    rscorecard::sc_select_(vars.vector) %>%
+    rscorecard::sc_year(year) %>%
+    rscorecard::sc_get()
+}
+```
+
+As mentioned earlier, the data collection began back in the 1900's. As it turns out, the variables of interest to our group, earnings later in life and tuition, were not recorded until 2000. Therefore, the earlier years are excluded from our analysis.
+
+```{r eval=FALSE}
 years <- c(2000:as.numeric(format(Sys.Date(), "%Y")))
 csb.data <- dplyr::bind_rows( lapply(years, get.data, vars_to_pull) )
+```
+
+## Continual Aquisition
+
+The server which hosts the college data only allows up to 100 calls at a given time. Due to the use of Github Actions to automatically re-render the report after any changes pushed to the main branch, this access limitation makes it impractical for long-term data sourcing. Therefore, the compiled data was converted into a csv file and stored remotely in Google's cloud service (Google Drive) to facilitate unrestricted access to the data.
+
+```{r eval=FALSE}
+write.csv(csb.data, "CollegeScorecardData20to21.csv", row.names=F)
+```
+
+The data stored on Google Drive can henceforth be obtained through a download using the id of the file and the following Google address to access it.
+
+```{r}
+id <- "1Sfa6V3vhxQU3wDMTKsPUpnkp9DX8gsOK"
+csb.data <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id))
 ```

@@ -5,9 +5,9 @@ earnings.idx <- function(csb.names, reduced=TRUE){
   else{
     earn.mean <- grep('MN_EARN_WNE_P[10,8,6]', csb.names)
     earn.med <- grep('MD_EARN_WNE_P[10,8,6]', csb.names)
-    #earn.p <- grep('PCT[0-9]._EARN_WNE_P[10,8,6]', csb.names)
+    earn.p <- grep('PCT[0-9]._EARN_WNE_P[10,8,6]', csb.names)
     earn.sd <- grep('SD_EARN_WNE_P[10,8,6]', csb.names)
-    return( c(earn.mean, earn.med, earn.sd) )
+    return( c(earn.mean, earn.sd, earn.med, earn.p) )
   }
 }
 
@@ -18,7 +18,7 @@ degree.idx <- function(csb.names){
 
 tuition.idx <- function(csb.names){
   csb.names <- toupper(csb.names)
-  return( c(which(csb.names=="COSTT4_A"):which(csb.names=="TUITIONFEE_OUT")) )
+  return( c(grep("COSTT4_A", csb.names):grep("TUITIONFEE_OUT", csb.names)) )
 }
 
 schools.idx <- function(csb.names){
@@ -28,15 +28,6 @@ schools.idx <- function(csb.names){
 sample.data <- function(csb.data, size=1000, seed=NULL){
   if( !is.null(seed) ) set.seed(seed)
   return( csb.data[sample(nrow(csb.data), size),] )
-}
-
-get.data <- function(year, vars.vector){
-  print(paste("Grabbing data for",year))
-  rscorecard::sc_init() %>%
-    rscorecard::sc_filter(ccbasic %in% c(24:32)) %>%
-    rscorecard::sc_select_(vars.vector) %>%
-    rscorecard::sc_year(year) %>%
-    rscorecard::sc_get()
 }
 
 subset.data <- function(csb.data, size=1000, seed=NULL, ...){
