@@ -206,6 +206,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="descriptive-statistics.html"><a href="descriptive-statistics.html#cost-variable"><i class="fa fa-check"></i><b>4.3</b> Cost Variable</a></li>
 <li class="chapter" data-level="4.4" data-path="descriptive-statistics.html"><a href="descriptive-statistics.html#relationship-between-earnings-and-cost"><i class="fa fa-check"></i><b>4.4</b> Relationship Between Earnings and Cost</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -231,7 +232,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>This package can installed in RStudio by running the command <code>install.packages("rscorecard")</code> in the console.</p>
 <p>Merely loading the package is not enough to use its functions. In order to communicate with the server which hosts the data, an API key from the U.S. Department of Education is required. This key acts as an authentication tool.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-acquisition.html#cb1-1"></a>rscorecard<span class="op">::</span><span class="kw">sc_key</span>(APIKey)</span></code></pre></div>
-<p>Our group was interested in the relationship between tuition cost and earnings after graduation across different academic fields. Although there were fields which recorded the proportion of degrees recieved in specific fields, these fields were not well standardized (i.e. “Engineering” vs. “Engineering or related fields”). Therefore, we decided to use school type instead. Table <a href="data-acquisition.html#tab:school">1.1</a> provides a list of the school types as classified by the Carnegie method that we included in our dataset. The specific earnings and tuition variables we considered are located in Table <a href="data-acquisition.html#tab:features">1.2</a>.</p>
+<p>Our group was interested in the relationship between tuition cost and earnings after graduation across different academic fields. Although there were fields which recorded the proportion of degrees recieved in specific fields, these fields were not well standardized (i.e. “Engineering” vs. “Engineering or related fields”). Therefore, we decided to narrow our scope to special-focus schools, as defined by the basic classification Carnegie Classification method, instead.</p>
+<blockquote>
+<p>The special-focus designation was based on the concentration of degrees in a single field or set of related fields, at both the undergraduate and graduate levels. Institutions were determined to have a special focus if they met any of the following conditions:</p>
+<ul>
+<li>Conferred at least 75% of degrees in just one field (as determined by the first two digits of the CIP Code) other than “Liberal Arts &amp; Sciences, General Studies or Humanities” (CIP2=24)</li>
+<li>Conferred 70-74% in one field and conferred degrees in no more than 2 other fields.</li>
+<li>Conferred 60-69% in one field and conferred degrees in no more than 1 other field.</li>
+</ul>
+<p>— Carnegie Classification of Institutions of Higher Education</p>
+</blockquote>
+<p>Table <a href="data-acquisition.html#tab:school">1.1</a> provides a list of the school types that we included in our dataset. For a complete list of all school classifications and corresponding definitions/methodology, see <a href="@noauthor_carnegie_nodate">Carnegie Classification of Institutions of Higher Education</a>. The specific earnings and tuition variables we considered are located in Table <a href="data-acquisition.html#tab:features">1.2</a>.</p>
 <table>
 <caption><span id="tab:school">Table 1.1: </span>School classifications considered in our analysis.</caption>
 <thead>
@@ -279,14 +290,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
+<br>
 <table>
 <caption>
 <span id="tab:features">Table 1.2: </span>Specific earnings and tuition variables considered in our analysis.
 </caption>
 </table>
-<div id="htmlwidget-abfd17fbfc3bd7b4b504" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-abfd17fbfc3bd7b4b504">{"x":{"filter":"none","vertical":false,"data":[["costt4_a","costt4_p","tuitionfee_in","tuitionfee_out","mn_earn_wne_p10","mn_earn_wne_p6","mn_earn_wne_p8","sd_earn_wne_p10","sd_earn_wne_p6","sd_earn_wne_p8","md_earn_wne_p10","md_earn_wne_p6","md_earn_wne_p8","pct10_earn_wne_p10","pct25_earn_wne_p10","pct75_earn_wne_p10","pct90_earn_wne_p10","pct10_earn_wne_p6","pct25_earn_wne_p6","pct75_earn_wne_p6","pct90_earn_wne_p6","pct10_earn_wne_p8","pct25_earn_wne_p8","pct75_earn_wne_p8","pct90_earn_wne_p8"],["Average cost of attendance (academic year institutions)","Average cost of attendance (program-year institutions)","In-state tuition and fees","Out-of-state tuition and fees","Mean earnings of students working and not enrolled 10 years after entry","Mean earnings of students working and not enrolled 6 years after entry","Mean earnings of students working and not enrolled 8 years after entry","Standard deviation of earnings of students working and not enrolled 10 years after entry","Standard deviation of earnings of students working and not enrolled 6 years after entry","Standard deviation of earnings of students working and not enrolled 8 years after entry","Median earnings of students working and not enrolled 10 years after entry","Median earnings of students working and not enrolled 6 years after entry","Median earnings of students working and not enrolled 8 years after entry","10th percentile of earnings of students working and not enrolled 10 years after entry","25th percentile of earnings of students working and not enrolled 10 years after entry","75th percentile of earnings of students working and not enrolled 10 years after entry","90th percentile of earnings of students working and not enrolled 10 years after entry","10th percentile of earnings of students working and not enrolled 6 years after entry","25th percentile of earnings of students working and not enrolled 6 years after entry","75th percentile of earnings of students working and not enrolled 6 years after entry","90th percentile of earnings of students working and not enrolled 6 years after entry","10th percentile of earnings of students working and not enrolled 8 years after entry","25th percentile of earnings of students working and not enrolled 8 years after entry","75th percentile of earnings of students working and not enrolled 8 years after entry","90th percentile of earnings of students working and not enrolled 8 years after entry"],["cost","cost","cost","cost","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>varname<\/th>\n      <th>description<\/th>\n      <th>dev_category<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,-1],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<p>Data is obtained through a series of piped functions: <code>sc_init()</code>, <code>sc_filter()</code>, <code>sc_select()</code>, <code>sc_year()</code>, and <code>sc_get()</code>. Unfortunately, the <code>sc_year()</code> function can only take a single-year entry. To simplify the process of grabbing the same data over the course of several years, a simple function was created.</p>
+<div id="htmlwidget-316181e61c544d8c7043" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-316181e61c544d8c7043">{"x":{"filter":"none","vertical":false,"data":[["costt4_a","costt4_p","tuitionfee_in","tuitionfee_out","mn_earn_wne_p10","mn_earn_wne_p6","mn_earn_wne_p8","sd_earn_wne_p10","sd_earn_wne_p6","sd_earn_wne_p8","md_earn_wne_p10","md_earn_wne_p6","md_earn_wne_p8","pct10_earn_wne_p10","pct25_earn_wne_p10","pct75_earn_wne_p10","pct90_earn_wne_p10","pct10_earn_wne_p6","pct25_earn_wne_p6","pct75_earn_wne_p6","pct90_earn_wne_p6","pct10_earn_wne_p8","pct25_earn_wne_p8","pct75_earn_wne_p8","pct90_earn_wne_p8"],["Average cost of attendance (academic year institutions)","Average cost of attendance (program-year institutions)","In-state tuition and fees","Out-of-state tuition and fees","Mean earnings of students working and not enrolled 10 years after entry","Mean earnings of students working and not enrolled 6 years after entry","Mean earnings of students working and not enrolled 8 years after entry","Standard deviation of earnings of students working and not enrolled 10 years after entry","Standard deviation of earnings of students working and not enrolled 6 years after entry","Standard deviation of earnings of students working and not enrolled 8 years after entry","Median earnings of students working and not enrolled 10 years after entry","Median earnings of students working and not enrolled 6 years after entry","Median earnings of students working and not enrolled 8 years after entry","10th percentile of earnings of students working and not enrolled 10 years after entry","25th percentile of earnings of students working and not enrolled 10 years after entry","75th percentile of earnings of students working and not enrolled 10 years after entry","90th percentile of earnings of students working and not enrolled 10 years after entry","10th percentile of earnings of students working and not enrolled 6 years after entry","25th percentile of earnings of students working and not enrolled 6 years after entry","75th percentile of earnings of students working and not enrolled 6 years after entry","90th percentile of earnings of students working and not enrolled 6 years after entry","10th percentile of earnings of students working and not enrolled 8 years after entry","25th percentile of earnings of students working and not enrolled 8 years after entry","75th percentile of earnings of students working and not enrolled 8 years after entry","90th percentile of earnings of students working and not enrolled 8 years after entry"],["cost","cost","cost","cost","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings","earnings"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>varname<\/th>\n      <th>description<\/th>\n      <th>dev_category<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,-1],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><br>
+Data is obtained through a series of piped functions: <code>sc_init()</code>, <code>sc_filter()</code>, <code>sc_select()</code>, <code>sc_year()</code>, and <code>sc_get()</code>. Unfortunately, the <code>sc_year()</code> function can only take a single-year entry. To simplify the process of grabbing the same data over the course of several years, a simple function was created.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="data-acquisition.html#cb2-1"></a>get.data &lt;-<span class="st"> </span><span class="cf">function</span>(year, vars.vector){</span>
 <span id="cb2-2"><a href="data-acquisition.html#cb2-2"></a>  <span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;Grabbing data for&quot;</span>,year))</span>
 <span id="cb2-3"><a href="data-acquisition.html#cb2-3"></a>  rscorecard<span class="op">::</span><span class="kw">sc_init</span>() <span class="op">%&gt;%</span></span>
@@ -369,6 +382,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
