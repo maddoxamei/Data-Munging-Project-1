@@ -1,0 +1,15 @@
+tab:features
+tab:sampledata
+tab:featuretypes
+the-dataset
+the-project
+data-acquisition
+initial-acquisition
+continual-aquisition
+data-quality
+data-preprocessing
+descriptive-statistics
+school-type
+earnings-variable
+cost-variable
+relationship-between-earnings-and-cost
