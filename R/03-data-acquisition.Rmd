@@ -19,7 +19,17 @@ Merely loading the package is not enough to use its functions. In order to commu
 rscorecard::sc_key(APIKey)
 ```
 
-Our group was interested in the relationship between tuition cost and earnings after graduation across different academic fields. Although there were fields which recorded the proportion of degrees recieved in specific fields, these fields were not well standardized (i.e. "Engineering" vs. "Engineering or related fields"). Therefore, we decided to use school type instead. Table \@ref(tab:school) provides a list of the school types as classified by the Carnegie method that we included in our dataset. The specific earnings and tuition variables we considered are located in Table \@ref(tab:features).
+Our group was interested in the relationship between tuition cost and earnings after graduation across different academic fields. Although there were fields which recorded the proportion of degrees recieved in specific fields, these fields were not well standardized (i.e. "Engineering" vs. "Engineering or related fields"). Therefore, we decided to narrow our scope to special-focus schools, as defined by the basic classification Carnegie Classification method, instead. 
+
+>The special-focus designation was based on the concentration of degrees in a single field or set of related fields, at both the undergraduate and graduate levels. Institutions were determined to have a special focus if they met any of the following conditions:
+>
+>- Conferred at least 75% of degrees in just one field (as determined by the first two digits of the CIP Code) other than "Liberal Arts & Sciences, General Studies or Humanities" (CIP2=24)
+>- Conferred 70-74% in one field and conferred degrees in no more than 2 other fields.
+>- Conferred 60-69% in one field and conferred degrees in no more than 1 other field.
+>  
+>--- Carnegie Classification of Institutions of Higher Education
+
+Table \@ref(tab:school) provides a list of the school types that we included in our dataset. For a complete list of all school classifications and corresponding definitions/methodology, see [Carnegie Classification of Institutions of Higher Education](@noauthor_carnegie_nodate). The specific earnings and tuition variables we considered are located in Table \@ref(tab:features).
 
 ```{r school, echo=FALSE}
 knitr::kable(
@@ -27,9 +37,7 @@ knitr::kable(
   caption = 'School classifications considered in our analysis.'
 )
 ```
-
-
-
+<br>
 ```{r features, results="asis", echo=FALSE}
 if( knitr::is_html_output(excludes = "markdown") ){
   
@@ -55,8 +63,7 @@ if( knitr::is_html_output(excludes = "markdown") ){
 }
 ```
 
-
-
+<br>
 Data is obtained through a series of piped functions: `sc_init()`, `sc_filter()`, `sc_select()`, `sc_year()`, and `sc_get()`. Unfortunately, the `sc_year()` function can only take a single-year entry. To simplify the process of grabbing the same data over the course of several years, a simple function was created. 
 
 ```{r eval=FALSE}
