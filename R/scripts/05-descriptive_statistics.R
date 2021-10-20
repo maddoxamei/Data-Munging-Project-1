@@ -12,7 +12,7 @@ school.distribution <- function(){
   return(plotly::ggplotly(p, tooltip=c("x","y")))
 }
 
-earnings.percentiles <- function(){
+earnings.percentiles.comprehensive <- function(){
   hc <- highchart()
   for(years in c("06", "08", 10)){
     low <- mean(csb.data[[paste("pct10_earn_wne_p", years, sep = "")]], na.rm=T)
@@ -36,6 +36,36 @@ earnings.percentiles <- function(){
     hc.label("Years After Entry", "Earnings", 
              "Average Earnings after entry") %>% 
     hc_xAxis(labels=list(enabled=F))
+}
+
+earnings.percentiles.year <- function(){
+  tb <- NULL
+  for(years in c("06", "08", 10)){
+    x <- NULL
+    for(data in split(csb.data, csb.data$year)){
+      low <- mean(data[[paste("pct10_earn_wne_p", years, sep = "")]], na.rm=T)
+      q1 <- mean(data[[paste("pct25_earn_wne_p", years, sep = "")]], na.rm=T)
+      median <- mean(data[[paste("md_earn_wne_p", years, sep = "")]], na.rm=T)
+      q3 <- mean(data[[paste("pct75_earn_wne_p", years, sep = "")]], na.rm=T)
+      high <- mean(data[[paste("pct90_earn_wne_p", years, sep = "")]], na.rm=T)
+      if( is.nan(high) ) high <- -1
+      x <- append(x, list(list(name=unique(data$year), low=low, q1=q1, median=median, q3=q3, high=high)))
+    }
+    tb <- bind_rows(tb, list(tibble::as_tibble(list(name=paste(years, "Years"), data=list(x), id=years, type="boxplot"))))
+  }
+  
+  highchart() %>%
+    hc_add_series_list(tb)%>%
+    hc_tooltip(headerFormat='<b>{point.x}</b><br/><span style="color:{point.color}">●</span> {series.name} After Entry<br/>',
+               pointFormat='
+                 90th Percentile: {point.high}<br/>
+                 75th Percentile: {point.q3}<br/>
+                 Median: {point.median}<br/>
+                 25th Percentile: {point.q1}<br/>
+                 10th percentile: {point.low}') %>% 
+    hc.label("Year", "Earnings", 
+             "Average Earnings after entry") %>% 
+    hc_xAxis(categories=levels(as.factor(csb.data$year)))
 }
 
 earnings.sd <- function(){

@@ -4,6 +4,10 @@ editor_options:
   chunk_output_type: console
 ---
 # Descriptive Statistics
+
+> ![sticky-note with remember written on it](https://cdn.pixabay.com/photo/2016/12/21/05/44/reminder-1922255_1280.png){width=10%}
+> All the charts, plots, and tables contained in this section are **interactive**. Hover over content to obtain more information.
+
 ```{r include=FALSE}
 csb.data.unitid <- csb.data %>% dplyr::group_by(unitid,instnm, ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T),sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
 
@@ -12,11 +16,13 @@ csb.data.year.ccbasic$n <- csb.data %>% count(year, ccbasic)
 
 csb.data.ccbasic <- csb.data %>% dplyr::group_by(ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T), sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
 csb.data.ccbasic$n <- csb.data %>% count(ccbasic)
+
+csb.data.year <- csb.data %>% dplyr::group_by(year) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T), sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
 ```
 
 ## School Type
 
-The number of schools for each category Figure \@ref(fig:schooldistribution) 
+As revealed by Figure \@ref(fig:schooldistribution), the proportion of schools in each category is consistent across the all years. Faith-Related and Health Professional schools _each_ account for approximately $1/3$ of the all the schools. This is an interesting pattern due to the rise in technology-based schools. It is possible they were classified rather as research-based schools or have not been included in the Department of Educations data.
 
 ```{r schooldistribution, fig.cap="School Distribution", echo=FALSE}
 school.distribution()
@@ -25,7 +31,7 @@ school.distribution()
 ## Earnings Variable
 
 ```{r earningspercentiles, fig.cap="Percentiles of Earnings", echo=F}
-earnings.percentiles()
+earnings.percentiles.year()
 ```
 
 ```{r earningssd, fig.cap="Standard Deviation of Earnigns", echo=F}
