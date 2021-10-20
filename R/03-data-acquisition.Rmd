@@ -28,6 +28,8 @@ knitr::kable(
 )
 ```
 
+
+
 ```{r features, results="asis", echo=FALSE}
 if( knitr::is_html_output(excludes = "markdown") ){
   
@@ -52,6 +54,7 @@ if( knitr::is_html_output(excludes = "markdown") ){
   )
 }
 ```
+
 
 
 Data is obtained through a series of piped functions: `sc_init()`, `sc_filter()`, `sc_select()`, `sc_year()`, and `sc_get()`. Unfortunately, the `sc_year()` function can only take a single-year entry. To simplify the process of grabbing the same data over the course of several years, a simple function was created. 

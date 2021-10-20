@@ -1,11 +1,11 @@
 ---
 output: html_document
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 # Data Preprocessing
 
-The raw data we are working with has `r nrow(csb.data)` rows and `r ncol(csb.data)` columns. A sample of this data is provided below in table \@ref(tab:sampledata). 
+The raw data we are working with has `r nrow(csb.data)` rows and `r ncol(csb.data)` columns. A sample of this transposed data is provided below in table \@ref(tab:sampledata). Note, the transposition occurs to ensure information is not cut off by the edge of the page.
 
 ```{r sampledata, results="asis", echo=FALSE}
 if( knitr::is_html_output(excludes = "markdown") ){
@@ -13,9 +13,10 @@ if( knitr::is_html_output(excludes = "markdown") ){
   cat("<table>",paste0("<caption>", "(#tab:sampledata)", "Sample Data.", "</caption>"),"</table>", sep ="\n")
   
   # Provide a searchable table widget which provides explanations for all relevant columns
-  DT::datatable( head(csb.data), 
-                rownames = F, 
-                options = list(pageLength=3))
+  DT::datatable( t(head(csb.data)), 
+                rownames = T, 
+                options = list(pageLength=5,
+                               lengthMenu=c(5, 10, 15, -1)))
 
 } else {
   knitr::kable(
@@ -26,6 +27,8 @@ if( knitr::is_html_output(excludes = "markdown") ){
 }
 ```
 
+
+
 Notice that the columns for the earnings table places the year subsets in the order of 10, 6 then 8. To ensure this ordering is not reflected in the later graphs, the column are renamed and then sorted alphebetically.
 
 ```{r include = FALSE}
@@ -35,7 +38,7 @@ colnames(features) <- "original"
 csb.data %<>% tibble::as_tibble() %>% column.types() %>% column.reorder()
 ```
 
-Originally, the `ccbasic` (school type) column is an integer. Although the values are integers, they represent categories. Therefore, they must be converted into factors. Factors are R's equivalent categorical variables. They are treated differently than normal characters. On that note, the `unitid` is also changed so that the id is treated as an object an not a descrete value. The original data types and altered types of the columns can be found in table \@ref(tab:featuretypes).
+Originally, the `ccbasic` (school type) column is an integer. Although the values are integers, they represent categories. Therefore, they must be converted into factors. Factors are R's equivalent categorical variables. They are treated differently than normal characters. On that note, the `unitid` is also changed so that the id is treated as an object an not a descrete value. The original data types and altered types of the columns can be found in Table \@ref(tab:featuretypes). 
 
 ```{r featuretypes, results="asis", echo=FALSE}
 features$altered <- ifelse(features$original == 
@@ -47,7 +50,7 @@ if( knitr::is_html_output(excludes = "markdown") ){
   
   # Provide a searchable table widget which provides explanations for all relevant columns
   DT::datatable( features, 
-                rownames = F, 
+                rownames = T, 
                 options = list(pageLength=5, 
                                lengthMenu=c(5, 10, -1)))
 
