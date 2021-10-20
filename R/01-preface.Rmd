@@ -10,5 +10,5 @@ for (file in grep("/_", rscripts, invert=T, value=T)) {
   source(file, local = knitr::knit_global())
 }
 
-knitr::opts_chunk$set(message = F, warning = F, results = 'hide')
+knitr::opts_chunk$set(message = F, warning = F)
 ```
