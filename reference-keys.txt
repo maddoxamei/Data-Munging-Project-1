@@ -1,6 +1,14 @@
+tab:school
 tab:features
 tab:sampledata
 tab:featuretypes
+fig:schooldistribution
+fig:earningspercentiles
+fig:earningssd
+fig:tutionstream
+fig:coststream
+fig:costtoearninst
+fig:costtoearnyear
 the-dataset
 the-project
 data-acquisition
