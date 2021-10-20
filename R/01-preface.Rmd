@@ -12,10 +12,3 @@ for (file in grep("/_", rscripts, invert=T, value=T)) {
 
 knitr::opts_chunk$set(message = F, warning = F, results = 'hide')
 ```
-
-# Introduction {-}
-
-## The Dataset
-
-## The project
-

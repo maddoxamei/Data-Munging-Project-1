@@ -19,7 +19,7 @@ Merely loading the package is not enough to use its functions. In order to commu
 rscorecard::sc_key(APIKey)
 ```
 
-Our group was interested in the relationship between tuition cost and earnings after graduation across different academic fields. Although there were fields which recorded the proportion of degrees recieved in specific fields, these fields were not well standardized (i.e. "Engineering" vs. "Engineering or related fields"). Therefore, we decided to use school type instead. Table \@ref(tab:school) provides a list of the school types as classified by the Carnegie method that we included in our dataset.
+Our group was interested in the relationship between tuition cost and earnings after graduation across different academic fields. Although there were fields which recorded the proportion of degrees recieved in specific fields, these fields were not well standardized (i.e. "Engineering" vs. "Engineering or related fields"). Therefore, we decided to use school type instead. Table \@ref(tab:school) provides a list of the school types as classified by the Carnegie method that we included in our dataset. The specific earnings and tuition variables we considered are located in Table \@ref(tab:features).
 
 ```{r school, echo=FALSE}
 knitr::kable(
@@ -27,8 +27,6 @@ knitr::kable(
   caption = 'School classifications considered in our analysis.'
 )
 ```
-
-The specific earnings and tuition variables we considered are located in \@ref(tab:features)
 
 ```{r features, results="asis", echo=FALSE}
 if( knitr::is_html_output(excludes = "markdown") ){
@@ -54,6 +52,7 @@ if( knitr::is_html_output(excludes = "markdown") ){
   )
 }
 ```
+
 
 Data is obtained through a series of piped functions: `sc_init()`, `sc_filter()`, `sc_select()`, `sc_year()`, and `sc_get()`. Unfortunately, the `sc_year()` function can only take a single-year entry. To simplify the process of grabbing the same data over the course of several years, a simple function was created. 
 
