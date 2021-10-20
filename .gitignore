@@ -40,3 +40,4 @@ vignettes/*.pdf
 
 # bookdown output directory
 /_book/
+/_bookdown_files/
