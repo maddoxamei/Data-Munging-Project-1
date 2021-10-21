@@ -34,12 +34,12 @@ inflation.year.adjustment <- function(data){
 
 inflation.adjustment <- function(data, years){
   for( col in tuition.idx(colnames(data))){
-    data[,col] <- priceR::adjust_for_inflation(data[,col], years["original"], "US", to_date = 2020)
+    data[,col] <- priceR::adjust_for_inflation(data[,col], years[["original"]], "US", to_date = 2020)
   }
   
   for( col in earnings.idx(colnames(data))){
     years <- tibble::as_tibble(years)
-    data[,col] <- priceR::adjust_for_inflation(data[,col], years["adjusted"], "US", to_date = 2020)
+    data[,col] <- priceR::adjust_for_inflation(data[,col], years[["adjusted"]], "US", to_date = 2020)
   }
   
   return(data)

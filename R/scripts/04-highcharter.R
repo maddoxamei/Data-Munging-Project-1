@@ -29,6 +29,7 @@ plot.violin <- function(data, var, group, boxdata){
   # group <- deparse(substitute(group))
   if( !is.factor(data[[group]]) ) data[[group]] <- as.factor(data[[group]])
   for(x in levels(data[[group]])){
+    if( any(!is.na(data[data[[group]]==x,var])) ) next;
     density <- density(data[data[[group]]==x,var], na.rm=T)
     if( length(grep("e", max(density$y))) == 0 ) multiple <- -1/10
     else multiple <- -(as.numeric(gsub(".*e", "", max(density$y)))+1)
@@ -36,7 +37,7 @@ plot.violin <- function(data, var, group, boxdata){
     ds <- c(ds, list(list(data = cbind(density$y*10^multiple+idx,density$x), name=x, type="area"),
                      list(data = cbind(-density$y*10^multiple+idx,density$x), name=x, type="area")))
   }
-  
+  if( is.null(ds) ) return( highchart() )
   hc <- highchart()%>% hc_xAxis(type='category')%>%
     hc_add_series_list(ds)%>%hc_chart(inverted=T)%>%
     hc_add_series_list(boxdata) %>% 
