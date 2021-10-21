@@ -1,1 +1,42 @@
 # Data Quality
+
+The U.S. Department of Education released their own reports regarding the important properties and limitations of the data along with a data quality segment, delving into detail regarding consistency and completeness assessment of reporting by institutions. 
+
+> ![sticky-note with remember written on it](https://cdn.pixabay.com/photo/2016/12/21/05/44/reminder-1922255_1280.png){width=10%}
+> All blocked quotes in this chapter are directly obtained from one of the two technical documentation reports released by the U.S. Department of Education.
+
+**Believability**
+The data is gathered by the U.S. Department of Education, therefore there is no reason to presume intentional falsity in the distributed data. However, credibility of the information is also relient on institution transparency and accurate algorithmic matching. Earnings-related information is one such example of algorithmically obtained/matched information.
+>NSLDS is the Department’s central database for monitoring Title IV federal student aid...provides administrative data from which loan debt data elements and cohorts for earnings can be constructed.
+
+>Scorecard linked NSLDS records to administrative tax records maintained by the IRS within the Department of the Treasury. 
+
+<br/>
+**Completeness**
+
+
+<br/>
+**Consistent Representation**
+Earning values are presented in inflation-adjusted dollars. The inconsistency lies in the reference year for inflation adjustment.
+
+> Earnings included in the 2011_12 and prior Scorecard data files 
+are inflation adjusted to 2014 dollars using the Consumer Price 
+Index for all Urban Consumers (CPI-U). Beginning with the 
+2012_13 Scorecard data file, earnings included in the XXXX_YY 
+data file are inflation adjusted to XXXX+3 dollars using the CPI-
+U. For example, earnings included in the 2014_15 Scorecard 
+data file are inflation adjusted to 2017 dollars.
+
+> The reference year for inflation adjustment is one year following the latest measurement year for the cohort (e.g., earnings measured in calendar years 2016 and 2017 were adjusted to 2018 dollars)
+
+>Beginning with the 2018_19 data files...earnings inflation adjusted to correspond to the closing year of the data file they are included in (e.g, adjusted to 2019 dollars if included in the 2018_19 data 
+file)
+
+<br/>
+**Objectivity**
+According to the technical documentation, the earnings data is only tracked for Title IV (federal financial aid) receiving students. Therefore, the data may not be representative of institutions or fields of study with a low proportion of Title IV-eligible students. Furthermore, not all income for Title IV-receiving students is accounted for.
+>Earnings are defined as the sum of wages and deferred compensation40 from all W-2 forms received for each individual, plus self-employment earnings from Schedule SE.
+
+<br/>
+**Timeliness**
+New data is released annually. Updates of older data also occurs once newer information becomes available (i.e. retrospectively populating columns regarding metrics that were not tracked at the time of the initial data release).
