@@ -27,8 +27,7 @@ if( knitr::is_html_output(excludes = "markdown") ){
 }
 ```
 
-
-
+<br/>
 Notice that the columns for the earnings table places the year subsets in the order of 10, 6 then 8. To ensure this ordering is not reflected in the later graphs, the column are renamed and then sorted alphebetically.
 
 ```{r include = FALSE}
@@ -59,6 +58,31 @@ if( knitr::is_html_output(excludes = "markdown") ){
     features,
     booktabs = TRUE,
     caption = 'Specific earnings and tuition variables considered in our analysis..'
+  )
+}
+```
+
+<br/>
+As mentioned earlier, the earnings features are all inflation adjusted, but to different years. In order to minimize the effect of economic health on our results, all the monetary values are inflated or deflated to the target year 2020. All cost of attendance related values are also adjusted to 2020. Table \@ref(tab:inflationyears) provides the base assumptions of what years the earnings values have been adjusted to based on the information in the Technical Documentation of the Scorecard reports.
+```{r inflationyears, results="asis", echo=FALSE}
+years.tb <- csb.data %>% inflation.year.adjustment()
+csb.data %<>% inflation.adjustment(years.tb)
+
+if( knitr::is_html_output(excludes = "markdown") ){
+  
+  cat("<table>",paste0("<caption>", "(#tab:inflationyears)", "Base assumptions of inflation years", "</caption>"),"</table>", sep ="\n")
+  
+  # Provide a searchable table widget which provides explanations for all relevant columns
+  DT::datatable( unique(years.tb), 
+                rownames = F, 
+                options = list(pageLength=5, 
+                               lengthMenu=c(5, 10, 15, -1)))
+
+} else {
+  knitr::kable(
+    unique(years.tb),
+    booktabs = TRUE,
+    caption = 'Base assumptions of inflation years'
   )
 }
 ```

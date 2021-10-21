@@ -20,3 +20,30 @@ column.reorder <- function(data){
   return(data)
 }
 
+inflation.year.adjustment <- function(data){
+  years <- tibble::as_tibble(data[["year"]])
+  colnames(years) <- "original"
+  years$adjusted <- sapply(years$original, function(x){
+    if(x <= 2011) 2014
+    else if(x >= as.numeric(format(Sys.Date(), "%Y"))) as.numeric(format(Sys.Date(), "%Y"))
+    else if(x >= 2018) x+1 
+    else x+3
+  })
+  return(years)
+}
+
+inflation.adjustment <- function(data, years){
+  for( col in tuition.idx(colnames(data))){
+    data[,col] <- priceR::adjust_for_inflation(data[,col], years["original"], "US", to_date = 2020)
+  }
+  
+  for( col in earnings.idx(colnames(data))){
+    years <- tibble::as_tibble(years)
+    data[,col] <- priceR::adjust_for_inflation(data[,col], years["adjusted"], "US", to_date = 2020)
+  }
+  
+  return(data)
+}
+
+
+

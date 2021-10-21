@@ -18,7 +18,7 @@ degree.idx <- function(csb.names){
 
 tuition.idx <- function(csb.names){
   csb.names <- toupper(csb.names)
-  return( c(grep("COSTT4_A", csb.names):grep("TUITIONFEE_OUT", csb.names)) )
+  return( c(grep("COSTT4_", csb.names), grep("TUITIONFEE_", csb.names)) )
 }
 
 schools.idx <- function(csb.names){
