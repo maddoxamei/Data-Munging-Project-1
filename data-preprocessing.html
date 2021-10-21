@@ -229,17 +229,127 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="tab:sampledata">Table 3.1: </span>Sample Data.
 </caption>
 </table>
-<div id="htmlwidget-25db4a766244b205eb3b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-25db4a766244b205eb3b">{"x":{"filter":"none","vertical":false,"data":[["unitid","instnm","ccbasic","costt4_a","costt4_p","tuitionfee_in","tuitionfee_out","mn_earn_wne_p10","mn_earn_wne_p6","mn_earn_wne_p8","sd_earn_wne_p10","sd_earn_wne_p6","sd_earn_wne_p8","md_earn_wne_p10","md_earn_wne_p6","md_earn_wne_p8","pct10_earn_wne_p10","pct25_earn_wne_p10","pct75_earn_wne_p10","pct90_earn_wne_p10","pct10_earn_wne_p6","pct25_earn_wne_p6","pct75_earn_wne_p6","pct90_earn_wne_p6","pct10_earn_wne_p8","pct25_earn_wne_p8","pct75_earn_wne_p8","pct90_earn_wne_p8","year"],["101453","Heritage Christian University","24",null,null,"4992","4992",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"],["102058","Selma University","24",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"],["102395","United States Sports Academy","32",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"],["102580","Alaska Bible College","24",null,null,"4750","4750",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"],["103945","CollegeAmerica-Flagstaff","26",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"],["104090","Brookline College-Phoenix","26",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>1<\/th>\n      <th>2<\/th>\n      <th>3<\/th>\n      <th>4<\/th>\n      <th>5<\/th>\n      <th>6<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,10,15,-1],"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
-<p>Notice that the columns for the earnings table places the year subsets in the order of 10, 6 then 8. To ensure this ordering is not reflected in the later graphs, the column are renamed and then sorted alphebetically.</p>
+<div id="htmlwidget-ea8d094a77aa7aba286b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ea8d094a77aa7aba286b">{"x":{"filter":"none","vertical":false,"data":[["unitid","instnm","ccbasic","costt4_a","costt4_p","tuitionfee_in","tuitionfee_out","mn_earn_wne_p10","mn_earn_wne_p6","mn_earn_wne_p8","sd_earn_wne_p10","sd_earn_wne_p6","sd_earn_wne_p8","md_earn_wne_p10","md_earn_wne_p6","md_earn_wne_p8","pct10_earn_wne_p10","pct25_earn_wne_p10","pct75_earn_wne_p10","pct90_earn_wne_p10","pct10_earn_wne_p6","pct25_earn_wne_p6","pct75_earn_wne_p6","pct90_earn_wne_p6","pct10_earn_wne_p8","pct25_earn_wne_p8","pct75_earn_wne_p8","pct90_earn_wne_p8","year"],["101453","Heritage Christian University","24",null,null,"4992","4992",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"],["102058","Selma University","24",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"],["102395","United States Sports Academy","32",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"],["102580","Alaska Bible College","24",null,null,"4750","4750",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"],["103945","CollegeAmerica-Flagstaff","26",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"],["104090","Brookline College-Phoenix","26",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"2000"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>1<\/th>\n      <th>2<\/th>\n      <th>3<\/th>\n      <th>4<\/th>\n      <th>5<\/th>\n      <th>6<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,10,15,-1],"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<p><br/>
+Notice that the columns for the earnings table places the year subsets in the order of 10, 6 then 8. To ensure this ordering is not reflected in the later graphs, the column are renamed and then sorted alphebetically.</p>
 <p>Originally, the <code>ccbasic</code> (school type) column is an integer. Although the values are integers, they represent categories. Therefore, they must be converted into factors. Factors are R’s equivalent categorical variables. They are treated differently than normal characters. On that note, the <code>unitid</code> is also changed so that the id is treated as an object an not a descrete value. The original data types and altered types of the columns can be found in Table <a href="data-preprocessing.html#tab:featuretypes">3.2</a>.</p>
 <table>
 <caption>
 <span id="tab:featuretypes">Table 3.2: </span>Feature Types.
 </caption>
 </table>
-<div id="htmlwidget-cee4daa63e128ac756d4" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-cee4daa63e128ac756d4">{"x":{"filter":"none","vertical":false,"data":[["unitid","instnm","ccbasic","costt4_a","costt4_p","tuitionfee_in","tuitionfee_out","mn_earn_wne_p10","mn_earn_wne_p6","mn_earn_wne_p8","sd_earn_wne_p10","sd_earn_wne_p6","sd_earn_wne_p8","md_earn_wne_p10","md_earn_wne_p6","md_earn_wne_p8","pct10_earn_wne_p10","pct25_earn_wne_p10","pct75_earn_wne_p10","pct90_earn_wne_p10","pct10_earn_wne_p6","pct25_earn_wne_p6","pct75_earn_wne_p6","pct90_earn_wne_p6","pct10_earn_wne_p8","pct25_earn_wne_p8","pct75_earn_wne_p8","pct90_earn_wne_p8","year"],["integer","character","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer"],["factor","integer",null,"character",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"character",null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>original<\/th>\n      <th>altered<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,10,-1],"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-b37cc71363ac649df2d9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b37cc71363ac649df2d9">{"x":{"filter":"none","vertical":false,"data":[["unitid","instnm","ccbasic","costt4_a","costt4_p","tuitionfee_in","tuitionfee_out","mn_earn_wne_p10","mn_earn_wne_p6","mn_earn_wne_p8","sd_earn_wne_p10","sd_earn_wne_p6","sd_earn_wne_p8","md_earn_wne_p10","md_earn_wne_p6","md_earn_wne_p8","pct10_earn_wne_p10","pct25_earn_wne_p10","pct75_earn_wne_p10","pct90_earn_wne_p10","pct10_earn_wne_p6","pct25_earn_wne_p6","pct75_earn_wne_p6","pct90_earn_wne_p6","pct10_earn_wne_p8","pct25_earn_wne_p8","pct75_earn_wne_p8","pct90_earn_wne_p8","year"],["integer","character","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer","integer"],["factor","integer",null,"character",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"character",null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>original<\/th>\n      <th>altered<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,10,-1],"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<br/>
+As mentioned earlier, the earnings features are all inflation adjusted, but to different years. In order to minimize the effect of economic health on our results, all the monetary values are inflated or deflated to the target year 2020. All cost of attendance related values are also adjusted to 2020. Table <a href="data-preprocessing.html#tab:inflationyears">3.3</a> provides the base assumptions of what years the earnings values have been adjusted to based on the information in the Technical Documentation of the Scorecard reports.
+[1] “costt4_a”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “costt4_p”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “tuitionfee_in”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “tuitionfee_out”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “mn_earn_wne_p06”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “mn_earn_wne_p08”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “mn_earn_wne_p10”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “sd_earn_wne_p06”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “sd_earn_wne_p08”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “sd_earn_wne_p10”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “md_earn_wne_p06”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “md_earn_wne_p08”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “md_earn_wne_p10”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct10_earn_wne_p06”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct10_earn_wne_p08”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct10_earn_wne_p10”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct25_earn_wne_p06”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct25_earn_wne_p08”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct25_earn_wne_p10”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct75_earn_wne_p06”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct75_earn_wne_p08”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct75_earn_wne_p10”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct90_earn_wne_p06”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct90_earn_wne_p08”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+[1] “pct90_earn_wne_p10”
+Generating URL to request all 299 results
+Retrieving inflation data for US
+Generating URL to request all 61 results
+<table>
+<caption>
+<span id="tab:inflationyears">Table 3.3: </span>Base assumptions of inflation years
+</caption>
+</table>
+<div id="htmlwidget-302ec0e9b9764abdc6a1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-302ec0e9b9764abdc6a1">{"x":{"filter":"none","vertical":false,"data":[[2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021],[2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2014,2015,2016,2017,2018,2019,2020,2019,2020,2021,2021]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>original<\/th>\n      <th>adjusted<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"lengthMenu":[5,10,15,-1],"columnDefs":[{"className":"dt-right","targets":[0,1]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 </div>
             </section>

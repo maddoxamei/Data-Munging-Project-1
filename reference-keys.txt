@@ -2,6 +2,7 @@ tab:school
 tab:features
 tab:sampledata
 tab:featuretypes
+tab:inflationyears
 fig:schooldistribution
 fig:earningspercentiles
 fig:earningssd
