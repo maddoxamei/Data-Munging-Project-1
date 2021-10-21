@@ -17,7 +17,7 @@ The data is gathered by the U.S. Department of Education, therefore there is no 
 
 <br/>
 **Consistent Representation**
-Earning values are presented in inflation-adjusted dollars. The inconsistency lies in the reference year for inflation adjustment.
+There is inconsistencies regarding which monetary amounts are numeric and which are inflation-adjusted. For example, tuition/cost are raw values representative of the year they were documented in whereas earning values are presented in inflation-adjusted dollars. More inconsistency lies in the reference year for inflation adjustment.
 
 > Earnings included in the 2011_12 and prior Scorecard data files 
 are inflation adjusted to 2014 dollars using the Consumer Price 
