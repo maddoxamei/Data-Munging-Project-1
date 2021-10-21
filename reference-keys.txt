@@ -9,8 +9,6 @@ fig:tutionstream
 fig:coststream
 fig:costtoearninst
 fig:costtoearnyear
-the-dataset
-the-project
 data-acquisition
 initial-acquisition
 continual-aquisition
