@@ -1,6 +1,12 @@
 # Introduction {-}
 
-## The Dataset
+The College Scorecard is a project of post-secondary school information aggregated, distributed, and maintained by the U.S. Department of Education.
 
-## The project
+> The primary purpose of the Scorecard is to provide data to help prospective postsecondary students 
+make informed enrollment decisions
+>
+> --- Technical Documentation of the College Scorecard Data
 
+Our project seeks to isolate specific variables to answer the following questions:
+1. Do specific degrees translate to higher earnings later in life?
+2. Do more expensive schools translate to higher earnigns later in life?
