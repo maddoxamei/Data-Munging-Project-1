@@ -5,9 +5,8 @@ tab:featuretypes
 tab:inflationyears
 fig:schooldistribution
 fig:earningspercentiles
+fig:earningscomp
 fig:earningssd
-fig:tutionstream
-fig:coststream
 fig:costtoearninst
 fig:costtoearnyear
 data-acquisition
