@@ -12,7 +12,6 @@ editor_options:
 csb.data.unitid <- csb.data %>% dplyr::group_by(unitid,instnm, ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T),sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
 
 csb.data.year.ccbasic <- csb.data %>% dplyr::group_by(year, ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T), sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
-csb.data.year.ccbasic$n <- csb.data %>% count(year, ccbasic)
 
 csb.data.ccbasic <- csb.data %>% dplyr::group_by(ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T), sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
 csb.data.ccbasic$n <- csb.data %>% count(ccbasic)
@@ -22,7 +21,7 @@ csb.data.year <- csb.data %>% dplyr::group_by(year) %>% dplyr::summarise(across(
 
 ## School Type
 
-As revealed by Figure \@ref(fig:schooldistribution), the proportion of schools in each category is consistent across the all years. Faith-Related and Health Professional schools _each_ account for approximately $1/3$ of the all the schools. This is an interesting pattern due to the rise in technology-based schools. It is possible they were classified rather as research-based schools or have not been included in the Department of Educations data.
+As revealed by Figure \@ref(fig:schooldistribution), the proportion of schools in each category is consistent across the all years. Faith-Related and Health Professional schools _each_ account for approximately $1/3$ of the all the schools. This is an interesting pattern due to the rise in technology-based schools. It is possible they were classified rather as research-based schools or have not been included in the Department of Education's data scope.
 
 ```{r schooldistribution, fig.cap="School Distribution", echo=FALSE}
 school.distribution()
@@ -30,24 +29,31 @@ school.distribution()
 
 ## Earnings Variable
 
+
+
+Figure \@ref(fig:earningspercentiles) depicts this relationship. When hovering, some boxplots might display a 90th percentile of $-1$. This was implemented as a workaround for the limitations of the graphics package that was used. When interpreting results, keep in mind that this indicates there were no recorded 90th percentile earnings for any school in that given year.
+
 ```{r earningspercentiles, fig.cap="Percentiles of Earnings", echo=F}
-earnings.percentiles.year()
+earnings.percentiles()
 ```
 
-```{r earningssd, fig.cap="Standard Deviation of Earnigns", echo=F}
-earnings.sd()
+```{r earningscomp, fig.cap="Standard Deviation of Earnigns", echo=F}
+highchart() %>% 
+  earnings.comprehensive("mn", "year", "line")
+```
+
+```{r}
+highchart() %>% 
+  earnings.comprehensive("mn", "ccbasic", "column")%>%hc_chart(inverted=T)
 ```
 
 ## Cost Variable
 
-```{r tutionstream, fig.cap="Tuition Over the Years", echo=F}
-tuition.stream()
+```{r earningssd, fig.cap="Standard Deviation of Earnigns", echo=F}
+highchart() %>%
+  violin.id.plots("costt4_|tuitionfee_", "year")%>%
+  hc.label("Years After Entry", "Cost", "Cost of Education")
 ```
-
-```{r coststream, fig.cap="Cost Over the Years", echo=F}
-cost.stream()
-```
-
 
 ## Relationship Between Earnings and Cost
 

@@ -34,13 +34,13 @@ plot.violin <- function(data, var, group, boxdata){
     if( length(grep("e", max(density$y))) == 0 ) multiple <- -1/10
     else multiple <- -(as.numeric(gsub(".*e", "", max(density$y)))+1)
     idx <- match(x, levels(data[[group]]))-1
-    ds <- c(ds, list(list(data = cbind(density$y*10^multiple+idx,density$x), name=x, type="area"),
-                     list(data = cbind(-density$y*10^multiple+idx,density$x), name=x, type="area")))
+    ds <- c(ds, list(list(data = cbind(density$y*10^multiple+idx,density$x), name=x, type="area", zIndex=2),
+                     list(data = cbind(-density$y*10^multiple+idx,density$x), name=x, type="area", zIndex=2)))
   }
   #if( is.null(ds) ) return( highchart() )
   hc <- highchart()%>% hc_xAxis(type='category')%>%
     hc_add_series_list(ds)%>%hc_chart(inverted=T)%>%
-    hc_add_series_list(boxdata) %>% 
+    hc_add_series_list(boxdata, zIndex=2) %>% 
     hc_plotOptions(area = list(fillOpacity=0.3, color = '#437bcc',
                                lineWidth=0, 
                                enableMouseTracking=F,
@@ -56,48 +56,52 @@ plot.violin <- function(data, var, group, boxdata){
   return(hc)
 }
 
-plot.violin.2 <- function(data, var, group, subgroup, boxdata){
+plot.violin.2 <- function(hc, data, var, group, subgroup, boxdata){
   ds <- NULL
   # var <- deparse(substitute(var))
   # group <- deparse(substitute(group))
   if( !is.factor(data[[group]]) ) data[[group]] <- as.factor(data[[group]])
   if( !is.factor(data[[subgroup]]) ) data[[subgroup]] <- as.factor(data[[subgroup]])
   
+  sub.len <- length(levels(data[[subgroup]]))
+  if( sub.len == 1 ) x2.inc <- 0
+  else x2.inc <- (1/sub.len)/1.73#1.73
+  offset <- -2/3*sub.len + 10/3 - sub.len%%2/3
+  
   x.idx <- 0
-  x2.inc <- (1/length(levels(data[[subgroup]]))/1.73)
   for(x in levels(data[[group]])){
-    x2.idx <- 0
+    
     for( x2 in levels(data[[subgroup]])){
       subset <- subset(data, data[[group]]==x & data[[subgroup]]==x2, select=var)
+      x2.idx <- match(x2, levels(data[[subgroup]]))-1
+      
       if( sum(!is.na(subset[[var]])) < 2 ) next
       density <- density(subset[[var]], na.rm=T)
       if( length(grep("e", max(density$y))) == 0 ) multiple <- -1/10
       else multiple <- -(as.numeric(gsub(".*e", "", max(density$y)))+1)
-      idx <- x.idx - (x2.inc) + (x2.idx*x2.inc)
-      ds <- c(ds, list(list(data = cbind(density$y*10^multiple+idx,density$x), name=x, type="area", colorIndex=x2.idx),
-                       list(data = cbind(-density$y*10^multiple+idx,density$x), name=x, type="area", colorIndex=x2.idx)))
+      idx <- x.idx - (x2.inc/offset) + (x2.idx*x2.inc)
+      ds <- c(ds, list(list(data = cbind(density$y*10^multiple+idx,density$x), name=x, type="area", colorIndex=x2.idx, zIndex=2),
+                       list(data = cbind(-density$y*10^multiple+idx,density$x), name=x, type="area", colorIndex=x2.idx, zIndex=2)))
       x2.idx <- x2.idx + 1
     }
     x.idx <- x.idx + 1
   }
-  hc <- highchart()%>% hc_xAxis(type='category')%>%
+  boxdata$zIndex <- 4
+  hc %>% hc_xAxis(type='category')%>%
     hc_add_series_list(ds)%>%
-    hc_add_series_list(boxdata) %>% 
+    hc_add_series_list(boxdata) %>%
+    hc_tooltip(
+      headerFormat = '<b>{point.x} Years</b><br/>')%>%
     hc_plotOptions(area = list(fillOpacity=0.3,
                                lineWidth=0, 
                                linkedTo=':previous',
                                tooltip=list(
-                                 headerFormat = '<b>{point.x} Years</b><br />',
-                                 pointFormat='{series.yAxis.axisTitle.textStr}: {point.y}'),
-                   boxplot = list( tooltip = list(
-                                    headerFormat = '<b>{point.x} Years</b><br />
-                                    <span style="color:{point.color}">●</span><b>{series.name}</b><br />',
-                                    pointFormat = 'Maximum: {point.high}<br/>Upper quartile: {point.q3}<br/>Median: {point.median}<br/>Lower quartile: {point.q1}<br/>Minimum: {point.low}<br/>')),
+                                 headerFormat = '<b>{series.name}</b><br />',
+                                 pointFormat='{series.yAxis.axisTitle.textStr}: {point.y}<br/>
+                                              Density: {point.x}'),
                    scatter = list(tooltip=list(
                      headerFormat = '<b>{point.x} Years</b><br />',
-                     pointFormat='{series.yAxis.axisTitle.textStr}: {point.y}')))%>%
-    hc_legend(enabled=T)
-  return(hc)
+                     pointFormat='{series.yAxis.axisTitle.textStr}: {point.y}'))))
 }
 
 plot.violin.jitter <- function(data, var, group, boxdata, scatter.hcaes){
@@ -116,13 +120,14 @@ plot.violin.jitter <- function(data, var, group, boxdata, scatter.hcaes){
 }
 
 hc.label <- function(hc, xlab, ylab,
-                     title=NULL, subtitle=NULL){
+                     title=NULL, subtitle=NULL,
+                     valuePrefix = '$'){
   hc<- hc %>%
     highcharter::hc_xAxis( title = list(text = xlab)) %>%
     highcharter::hc_yAxis( title = list(text = ylab) ) %>%
     highcharter::hc_title(text=title ,align="center") %>%
     highcharter::hc_subtitle(text=subtitle,align="center") %>%
-    highcharter::hc_tooltip(valuePrefix='$', valueDecimals=2)
+    highcharter::hc_tooltip(valuePrefix=valuePrefix, valueDecimals=2)
   return(hc)
 }
 
@@ -146,20 +151,9 @@ hc.scatter <- function(hc, zlab, boldtip=""){
     highcharter::hc_plotOptions(bubble=list(minSize="1%",maxSize="10%"))
 }
 
-income.brackets <- list(
-  list(label=list(text="Tier 1"), 
-       color='rgba(68, 170, 213, 0.1)', from=0,to=10000),
-  list(label=list(text="Tier 2"), 
-       color='rgba(0, 0, 0, 0)', from=10000,to=40000),
-  list(label=list(text="Tier 3"), 
-       color='rgba(68, 170, 213, 0.1)', from=40000,to=85000),
-  list(label=list(text="Tier 4"), 
-       color='rgba(0, 0, 0, 0)', from=85000,to=160000),
-  list(label=list(text="Tier 5"), 
-       color='rgba(68, 170, 213, 0.1)', from=160000,to=200000),
-  list(label=list(text="Tier 6"), 
-       color='rgba(0, 0, 0, 0)', from=200000,to=500000),
-  list(label=list(text="Tier 7"), 
-       color='rgba(68, 170, 213, 0.1)', from=500000)
-  )
-
+income.cutoffs <- c(0, 10000, 40000, 85000, 160000, 200000, 500000)
+  
+income.brackets <- lapply(1:length(income.cutoffs), function(x){
+  list(label=list(text=paste("Tier",x)), 
+       from=q[x], to=q[x+1], 
+       color=if(x%%2==0) 'white' else 'rgba(68, 170, 213, 0.1)')})

@@ -2,43 +2,19 @@ library(highcharter)
 library(magrittr)
 
 school.distribution <- function(){
-  p<- ggplot2::ggplot(data = csb.data, 
-                      ggplot2::aes(x = year, fill = as.factor(ccbasic))) + 
-    ggplot2::geom_bar(position = "fill") + 
-    ggplot2::labs(x = "Year", title = "Distribution of Schools") + 
-    ggplot2::coord_flip() + 
-    ggplot2::scale_fill_discrete(name="School Type")
-  
-  return(plotly::ggplotly(p, tooltip=c("x","y")))
+  highchart() %>% 
+    hc_add_series(count(csb.data, year, ccbasic), "column", 
+                  hcaes(x=year, y=n, group = ccbasic), 
+                  colorIndex = c(0:(nrow(ccbasic.labels)-1)), 
+                  stacking='percent')%>%
+    hc.label("Year", "Proportion","School Distribution", valuePrefix = '')%>%
+    hc_xAxis(crosshair=T)%>%
+    hc_tooltip(shared=T, useHTML=T,
+               headerFormat='<b>{point.x}</b><br/>', 
+               pointFormat='<span style="color:{point.color}">●</span>{series.name}:{point.percentage:.1f}%</b> ({point.y:.0f})<br/>')
 }
 
-earnings.percentiles.comprehensive <- function(){
-  hc <- highchart()
-  for(years in c("06", "08", 10)){
-    low <- mean(csb.data[[paste("pct10_earn_wne_p", years, sep = "")]], na.rm=T)
-    q1 <- mean(csb.data[[paste("pct25_earn_wne_p", years, sep = "")]], na.rm=T)
-    median <- mean(csb.data[[paste("md_earn_wne_p", years, sep = "")]], na.rm=T)
-    q3 <- mean(csb.data[[paste("pct75_earn_wne_p", years, sep = "")]], na.rm=T)
-    high <- mean(csb.data[[paste("pct90_earn_wne_p", years, sep = "")]], na.rm=T)
-    
-    x <- list(list(name=years, low=low, q1=q1, median=median, q3=q3, high=high))
-    hc %<>% hc_add_series_list(tibble::as_tibble(list(name=paste(years, "years"), data=list(x), id=NA, type="boxplot")))
-  }
-  
-  hc%>%
-    hc_tooltip(headerFormat='<span style="color:{point.color}">●</span><b>{series.name}</b><br/>',
-               pointFormat='
-                 90th Percentile: {point.high}<br/>
-                 75th Percentile: {point.q3}<br/>
-                 Median: {point.median}<br/>
-                 25th Percentile: {point.q1}<br/>
-                 10th percentile: {point.low}') %>% 
-    hc.label("Years After Entry", "Earnings", 
-             "Average Earnings after entry") %>% 
-    hc_xAxis(labels=list(enabled=F))
-}
-
-earnings.percentiles.year <- function(){
+earnings.percentiles <- function(){
   tb <- NULL
   for(years in c("06", "08", 10)){
     x <- NULL
@@ -51,7 +27,7 @@ earnings.percentiles.year <- function(){
       if( is.nan(high) ) high <- -1
       x <- append(x, list(list(name=unique(data$year), low=low, q1=q1, median=median, q3=q3, high=high)))
     }
-    tb <- bind_rows(tb, list(tibble::as_tibble(list(name=paste(years, "Years"), data=list(x), id=years, type="boxplot"))))
+    tb <- dplyr::bind_rows(tb, list(tibble::as_tibble(list(name=paste(years, "Years"), data=list(x), id=years, type="boxplot"))))
   }
   
   highchart() %>%
@@ -65,16 +41,33 @@ earnings.percentiles.year <- function(){
                  10th percentile: {point.low}') %>% 
     hc.label("Year", "Earnings", 
              "Average Earnings after entry") %>% 
-    hc_xAxis(categories=levels(as.factor(csb.data$year)))
+    hc_xAxis(categories=levels(as.factor(csb.data$year))) %>%
+    hc.axis(ymin = 0, ybands = income.brackets)
 }
 
-violin.year.plots <- function(var){
-  data <- reshape2::melt(csb.data[grep(paste(var,"|year", sep=''), colnames(csb.data))], id="year")
-  plot.violin.2(data, "value", "year", "variable", 
-                data_to_boxplot(data, value, year, variable))%>%
-    hc_xAxis(categories=levels(data$year)) %>%
+violin.id.plots <- function(hc, var, id){
+  data <- reshape2::melt(csb.data[grep(paste(var,"|",id, sep=''), colnames(csb.data))], id=id)
+  plot.violin.2(hc, data, "value", id, "variable", 
+                data_to_boxplot(data, value, id, variable))%>%
+    hc_xAxis(categories=levels(data[[id]])) %>%
     hc.axis(ymin = 0, ymax = max(density(data$value, na.rm = T)$x),
             ybands = income.brackets)
+}
+
+earnings.comprehensive <- function(hc, var, id, type){
+  data <- reshape2::melt(csb.data[grep(paste("sd|", id, sep=''), colnames(csb.data))], id=id) 
+  colnames(data)[1] <- "id"
+  data %<>%
+    dplyr::group_by(id, variable) %>% dplyr::summarise(sd_mean=mean(value, na.rm=T))
+  highchart() %>%
+    violin.id.plots("mn",id)%>%
+    hc_add_series(data=data, type=type,
+                  hcaes(x=as.factor(id), y=sd_mean, group=variable),
+                  colorIndex=c(0:(length(unique(data$variable))-1)), 
+                  zIndex=if(type=="column") 0 else 5) %>%
+    hc_plotOptions(line=list(connectNulls=T, dashStyle='ShortDashDot'),
+                   column=list(color='white', borderColor='black',  
+                               boarderWidth = 3, dashStyle='ShortDashDot'))
 }
 
 tuition.stream <- function(){
