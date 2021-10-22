@@ -155,5 +155,5 @@ income.cutoffs <- c(0, 10000, 40000, 85000, 160000, 200000, 500000)
   
 income.brackets <- lapply(1:length(income.cutoffs), function(x){
   list(label=list(text=paste("Tier",x)), 
-       from=q[x], to=q[x+1], 
+       from=income.cutoffs[x], to=income.cutoffs[x+1], 
        color=if(x%%2==0) 'white' else 'rgba(68, 170, 213, 0.1)')})
