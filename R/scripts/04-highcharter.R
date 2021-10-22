@@ -29,7 +29,7 @@ plot.violin <- function(data, var, group, boxdata){
   # group <- deparse(substitute(group))
   if( !is.factor(data[[group]]) ) data[[group]] <- as.factor(data[[group]])
   for(x in levels(data[[group]])){
-    if( any(!is.na(data[data[[group]]==x,var])) ) next;
+    #if( any(!is.na(data[data[[group]]==x,var])) ) next;
     density <- density(data[data[[group]]==x,var], na.rm=T)
     if( length(grep("e", max(density$y))) == 0 ) multiple <- -1/10
     else multiple <- -(as.numeric(gsub(".*e", "", max(density$y)))+1)
@@ -37,7 +37,7 @@ plot.violin <- function(data, var, group, boxdata){
     ds <- c(ds, list(list(data = cbind(density$y*10^multiple+idx,density$x), name=x, type="area"),
                      list(data = cbind(-density$y*10^multiple+idx,density$x), name=x, type="area")))
   }
-  if( is.null(ds) ) return( highchart() )
+  #if( is.null(ds) ) return( highchart() )
   hc <- highchart()%>% hc_xAxis(type='category')%>%
     hc_add_series_list(ds)%>%hc_chart(inverted=T)%>%
     hc_add_series_list(boxdata) %>% 
@@ -53,6 +53,50 @@ plot.violin <- function(data, var, group, boxdata){
                      headerFormat = '<b>{point.x} Years</b><br />',
                      pointFormat='{series.yAxis.axisTitle.textStr}: {point.y}')))%>%
     hc_legend(enabled=F)
+  return(hc)
+}
+
+plot.violin.2 <- function(data, var, group, subgroup, boxdata){
+  ds <- NULL
+  # var <- deparse(substitute(var))
+  # group <- deparse(substitute(group))
+  if( !is.factor(data[[group]]) ) data[[group]] <- as.factor(data[[group]])
+  if( !is.factor(data[[subgroup]]) ) data[[subgroup]] <- as.factor(data[[subgroup]])
+  
+  x.idx <- 0
+  x2.inc <- (1/length(levels(data[[subgroup]]))/1.73)
+  for(x in levels(data[[group]])){
+    x2.idx <- 0
+    for( x2 in levels(data[[subgroup]])){
+      subset <- subset(data, data[[group]]==x & data[[subgroup]]==x2, select=var)
+      if( sum(!is.na(subset[[var]])) < 2 ) next
+      density <- density(subset[[var]], na.rm=T)
+      if( length(grep("e", max(density$y))) == 0 ) multiple <- -1/10
+      else multiple <- -(as.numeric(gsub(".*e", "", max(density$y)))+1)
+      idx <- x.idx - (x2.inc) + (x2.idx*x2.inc)
+      ds <- c(ds, list(list(data = cbind(density$y*10^multiple+idx,density$x), name=x, type="area", colorIndex=x2.idx),
+                       list(data = cbind(-density$y*10^multiple+idx,density$x), name=x, type="area", colorIndex=x2.idx)))
+      x2.idx <- x2.idx + 1
+    }
+    x.idx <- x.idx + 1
+  }
+  hc <- highchart()%>% hc_xAxis(type='category')%>%
+    hc_add_series_list(ds)%>%
+    hc_add_series_list(boxdata) %>% 
+    hc_plotOptions(area = list(fillOpacity=0.3,
+                               lineWidth=0, 
+                               linkedTo=':previous',
+                               tooltip=list(
+                                 headerFormat = '<b>{point.x} Years</b><br />',
+                                 pointFormat='{series.yAxis.axisTitle.textStr}: {point.y}'),
+                   boxplot = list( tooltip = list(
+                                    headerFormat = '<b>{point.x} Years</b><br />
+                                    <span style="color:{point.color}">●</span><b>{series.name}</b><br />',
+                                    pointFormat = 'Maximum: {point.high}<br/>Upper quartile: {point.q3}<br/>Median: {point.median}<br/>Lower quartile: {point.q1}<br/>Minimum: {point.low}<br/>')),
+                   scatter = list(tooltip=list(
+                     headerFormat = '<b>{point.x} Years</b><br />',
+                     pointFormat='{series.yAxis.axisTitle.textStr}: {point.y}')))%>%
+    hc_legend(enabled=T)
   return(hc)
 }
 

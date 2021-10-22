@@ -64,10 +64,12 @@ if( knitr::is_html_output(excludes = "markdown") ){
 
 <br/>
 As mentioned earlier, the earnings features are all inflation adjusted, but to different years. In order to minimize the effect of economic health on our results, all the monetary values are inflated or deflated to the target year 2020. All cost of attendance related values are also adjusted to 2020. Table \@ref(tab:inflationyears) provides the base assumptions of what years the earnings values have been adjusted to based on the information in the Technical Documentation of the Scorecard reports.
-```{r inflationyears, results="asis", echo=FALSE}
+```{r include=FALSE}
 years.tb <- csb.data %>% inflation.year.adjustment()
 csb.data %<>% inflation.adjustment(years.tb)
+```
 
+```{r inflationyears, results="asis", echo=FALSE}
 if( knitr::is_html_output(excludes = "markdown") ){
   
   cat("<table>",paste0("<caption>", "(#tab:inflationyears)", "Base assumptions of inflation years", "</caption>"),"</table>", sep ="\n")

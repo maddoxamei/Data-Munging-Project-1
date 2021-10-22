@@ -68,20 +68,23 @@ earnings.percentiles.year <- function(){
     hc_xAxis(categories=levels(as.factor(csb.data$year)))
 }
 
-earnings.sd <- function(){
-  csb.data.sd <- reshape2::melt(csb.data[grep("sd", colnames(csb.data))])
-  plot.violin(csb.data.sd, "value", "variable", 
-              data_to_boxplot(csb.data.sd, value, variable, add_outliers = T))%>%
-    hc.label("Years After Entry", "Earnings", "Standard Deviation of Earnings") %>%
-    hc_xAxis(categories=gsub(".*p", "", levels(csb.data.sd$variable)))
+violin.year.plots <- function(var){
+  data <- reshape2::melt(csb.data[grep(paste(var,"|year", sep=''), colnames(csb.data))], id="year")
+  plot.violin.2(data, "value", "year", "variable", 
+                data_to_boxplot(data, value, year, variable))%>%
+    hc_xAxis(categories=levels(data$year)) %>%
+    hc.axis(ymin = 0, ymax = max(density(data$value, na.rm = T)$x),
+            ybands = income.brackets)
 }
 
 tuition.stream <- function(){
   highchart() %>% 
     #hc_yAxis_multiples(create_yaxis(naxis = 2, lineWidth = 2)) %>%
-    hc_add_series(csb.data.year.ccbasic, "streamgraph", hcaes(year, tuitionfee_in_mean, group = ccbasic), yAxis=0) %>%
+    hc_add_series(csb.data.year.ccbasic, "streamgraph", hcaes(year, tuitionfee_in_mean, group = ccbasic), 
+                  yAxis=0, colorIndex = c(0:(nrow(ccbasic.labels)-1))) %>%
     hc_add_yAxis(title=list(text="In-State"), relative=2)%>%
-    hc_add_series(csb.data.year.ccbasic, "streamgraph", hcaes(year, tuitionfee_out_mean, group = ccbasic), yAxis=1) %>%
+    hc_add_series(csb.data.year.ccbasic, "streamgraph", hcaes(year, tuitionfee_out_mean, group = ccbasic), 
+                  yAxis=1, colorIndex = c(0:(nrow(ccbasic.labels)-1))) %>%
     hc_add_yAxis(title=list(text="Out-of-State"), relative=2)%>%
     hc_tooltip(valuePrefix='$', valueDecimals=2,
                headerFormat='<b>{point.x}</b><br>
