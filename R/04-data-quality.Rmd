@@ -15,7 +15,7 @@ The data is gathered by the U.S. Department of Education, therefore there is no 
 <br/>
 **Completeness**
 
-```{r eval = FALSE}
+```{r echo = TRUE}
 na.test(csb.data[!colnames(csb.data) %in% c("unitid", "instnm", "ccbasic")])
 ```
 
