@@ -5,10 +5,11 @@ tab:featuretypes
 tab:inflationyears
 fig:schooldistribution
 fig:earningspercentiles
-fig:earningscomp
-fig:earningssd
-fig:costtoearninst
-fig:costtoearnyear
+fig:earningsyear
+fig:earningstype
+fig:costchart
+fig:tuitiontoearnyear
+fig:tuitiontoearninst
 data-acquisition
 initial-acquisition
 continual-aquisition
@@ -19,3 +20,4 @@ school-type
 earnings-variable
 cost-variable
 relationship-between-earnings-and-cost
+statistical-inference
