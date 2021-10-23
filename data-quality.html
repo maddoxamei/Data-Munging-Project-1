@@ -234,6 +234,8 @@ The data is gathered by the U.S. Department of Education, therefore there is no 
 </blockquote>
 <p><br/>
 <strong>Completeness</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="data-quality.html#cb6-1"></a><span class="kw">na.test</span>(csb.data[<span class="op">!</span><span class="kw">colnames</span>(csb.data) <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;unitid&quot;</span>, <span class="st">&quot;instnm&quot;</span>, <span class="st">&quot;ccbasic&quot;</span>)])</span></code></pre></div>
+<p>To test completeness we checked the number of NA values contained in each column and present the number of values that can be pushed into statistical analysis as percentages of the total entries. The general test checks for boolean, numeric and character/factor column types, with the majority of variables we chose being numeric in nature (the character columns, which we subset out, are observation identifiers). Many of the variables related to earnings had roughly <span class="math inline">\(%85-90\)</span> of the values as N/A’s whereas there was more usable data in variables pertaining to cost/tuition, with roughly <span class="math inline">\(%60-70\)</span> NA values.</p>
 <p><br/>
 <strong>Consistent Representation</strong>
 There is inconsistencies regarding which monetary amounts are numeric and which are inflation-adjusted. For example, tuition/cost are raw values representative of the year they were documented in whereas earning values are presented in inflation-adjusted dollars. More inconsistency lies in the reference year for inflation adjustment.</p>
