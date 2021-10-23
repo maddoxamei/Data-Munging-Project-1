@@ -59,7 +59,7 @@ earnings.comprehensive <- function(hc, var, id, type){
   colnames(data)[1] <- "id"
   data %<>%
     dplyr::group_by(id, variable) %>% dplyr::summarise(sd_mean=mean(value, na.rm=T))
-  highchart() %>%
+  hc %>%
     violin.id.plots("mn",id)%>%
     hc_add_series(data=data, type=type,
                   hcaes(x=as.factor(id), y=sd_mean, group=variable),
@@ -98,13 +98,13 @@ cost.stream <- function(){
     highcharter::hc_title(text="Cost of Attendence",align="center")
 }
 
-cost.to.earnings <- function(data, point, subtitle){
+tuition.to.earnings <- function(data, point, subtitle){
   highcharter::hchart(
     data, "scatter", highcharter::hcaes(tuitionfee_in_mean, 
-                                                   mn_earn_wne_p10_mean, 
-                                                   z = sd_earn_wne_p10_mean, 
-                                                   group = ccbasic)) %>%
-    hc.label("In-State Tuition","Mean Earnings","Cost to Earnings in 10 Years",subtitle) %>%
+                                        mn_earn_wne_p10_mean, 
+                                        z = sd_earn_wne_p10_mean, 
+                                        group = ccbasic)) %>%
+    hc.label("In-State Tuition","Mean Earnings","Tuition to Earnings in 10 Years",subtitle) %>%
     hc.scatter("Standard Deviation of Earnings (Size)", point) %>%
     hc.axis(ymax=150000, ybands=income.brackets)
 }

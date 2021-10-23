@@ -8,6 +8,8 @@ editor_options:
 > ![sticky-note with remember written on it](https://cdn.pixabay.com/photo/2016/12/21/05/44/reminder-1922255_1280.png){width=10%}
 > All the charts, plots, and tables contained in this section are **interactive**. Hover over content to obtain more information.
 
+Earnings are measured annually and track the income of Title-IV receiving students 6, 8, and 10 years after entering a postsecondary school. For clarity in interpreting trends, the 6, 8, and 10 measurement periods will be refered to as markers (i.e. 6-year marker). The timeline unit of sequentially measured dates will be refered to directly as year(s).
+
 ```{r include=FALSE}
 csb.data.unitid <- csb.data %>% dplyr::group_by(unitid,instnm, ccbasic) %>% dplyr::summarise(across(where(is.numeric), list(mean=~mean(.x, na.rm=T), med=~median(.x, na.rm=T),sd=~sd(.x, na.rm=T), min=~min(.x, na.rm=T), max=~max(.x, na.rm=T))))
 
@@ -29,7 +31,13 @@ school.distribution()
 
 ## Earnings Variable
 
+> All the earnings data that is presented in the following figures spans from 2003 - 2014. Earnings information has been calculated in the later years, however that information is stored in separate "field of study" data section. Although we could have aggregated information from two different sources, it was easier to just move forward with the more limited scope.
 
+> All the earning figures have designations which identify the income tax-brackets (Tiers) using the 2021 tax information.
+
+The 6-year mark median earnings have gradually fallen each year since 2009. In contrast, the 10-year mark median earnings have consistently risen since their first reporting back in 2007. The 8-year mark median earnings have remained moreorless consistent throught the years. 
+
+Although the 10-year mark median earnings are noticeably higher, the overall range of earnings encompasses all those of the lower-year marks. Some 10-year mark individuals even earn less than the least paid 6-year mark counterparts.
 
 Figure \@ref(fig:earningspercentiles) depicts this relationship. When hovering, some boxplots might display a 90th percentile of $-1$. This was implemented as a workaround for the limitations of the graphics package that was used. When interpreting results, keep in mind that this indicates there were no recorded 90th percentile earnings for any school in that given year.
 
@@ -37,19 +45,35 @@ Figure \@ref(fig:earningspercentiles) depicts this relationship. When hovering, 
 earnings.percentiles()
 ```
 
-```{r earningscomp, fig.cap="Standard Deviation of Earnigns", echo=F}
+The U.S. Department of Education reports both the mean and standard deviation of earnings. Figure \@ref(fig:earningsyear) depicts the percentiles and distribution of the mean earnings, as well as the average standard deviation for each year-marker in a given year. Note, that the standard deviation is **not** measuring the variability of the mean earnings, but rather the variation of the actual earnings from the distribution of means. 
+
+Unlike the median earning trends, the three year-marker median mean-earnings are more consistent across the years. All three markers are also unimodal, though the 8-year markers do have a small aggregation of means near the Tier 3/4 cutoff point.
+
+Since 2003, the variability of income has increased for all 3 year-markers, though the increase is more significant in higher-year markers. The distribution of all the mean earnings is heavily positively skewed, meaning there are a few schools with significantly higher mean incomes. 
+
+```{r earningsyear, fig.cap="Average Earnings by Year", echo=F}
 highchart() %>% 
-  earnings.comprehensive("mn", "year", "line")
+  earnings.comprehensive("mn", "year", "line") %>%
+  hc.label("Year","Earnings","Average Earnings","By Year")
 ```
 
-```{r}
+Similarly to Figure \@ref(fig:earningsyear), Figure \@ref(fig:earningstype) depicts the distribution of mean earnings and average standard deviation of actual incomes. The difference is that it breaks down earnings by school type as opposed to over time.
+
+Other Special Focus Institutions is distinctly bi-modal, with a smaller mode occurring below the first quartile. Engineering schools also appears to be bi-modal, but the modes are not as pronounced as the data a bit more variety compartively. Medical Schools & Centers have the most variety, followed by law school.
+
+```{r earningstype, fig.cap="Average Earnings by Type", echo=F}
 highchart() %>% 
-  earnings.comprehensive("mn", "ccbasic", "column")%>%hc_chart(inverted=T)
+  earnings.comprehensive("mn", "ccbasic", "column")%>%hc_chart(inverted=T)%>%
+  hc.label("Year","Earnings","Average Earnings","By School Type")
 ```
 
 ## Cost Variable
 
-```{r earningssd, fig.cap="Standard Deviation of Earnigns", echo=F}
+Because in-state and out-of-state tuition costs appear to be gradually increasing over the years at the same rate, the results of using just one when analyzing the cost to earnings relationship is comparable to if the other had been used. Cost of attendance is a much more holistic way to gauge post-secondary school cost. Unfortunately, this information was only collected starting in 2009. Due to the lack of earnings data for some given years, there is more overlap of data if using tuition in the relationship comparison.
+
+Cost of an academic year also seems to remain more or less steady throughout the years. The same can be said regarding the distribution of those three variables as well. The only variable which noticably varies from year is the cost of a program year. 
+
+```{r costchart, fig.cap="Cost of Attendence", echo=F}
 highchart() %>%
   violin.id.plots("costt4_|tuitionfee_", "year")%>%
   hc.label("Years After Entry", "Cost", "Cost of Education")
@@ -57,10 +81,16 @@ highchart() %>%
 
 ## Relationship Between Earnings and Cost
 
-```{r costtoearninst, fig.cap="Institution Cost to Earnings", echo=F}
-cost.to.earnings(csb.data.unitid, "{point.instnm}", "Averaged across all years")
+For the following figures, the size of each circle is based on the standard deviation. In other words, the placement of a point idicates a mean earning for a respective in-state tuition cost whereas the size indicates the amount of variability around that mean earnings value.
+
+> Note, the size is not a reflection of the actual standard deviation value, rather a relative value of it.
+
+Over the years, the tuition for postsecondary schools has increased, on average. With this increase in cost, the mean earnings later in life have linearly increased for Medical Schools & Centers and Business & Management Schools. For all other schools, the tuition has risen without a significant change in mean earnings later in life. This is reflected in both Figure \@ref(fig:tuitiontoearnyear) and Figure \@ref(fig:tuitiontoearninst). Considering the boom in Engineering/Technology-Related degrees, with boasted higher earnings straight out of college, average out to be equivalent later in life. Such trends potentially indicates experience, rather than academic education, is the more significant factor in evaluating payment. Other Health Professions Schools have the most "scattered" tuition-to-earnings spread.
+
+```{r tuitiontoearnyear, fig.cap="Yearly Tuition to Earnings", echo=F}
+tuition.to.earnings(csb.data.year.ccbasic, "{point.year}", "Averaged across all school types")
 ```
 
-```{r costtoearnyear, fig.cap="Yearly Cost to Earnings", echo=F}
-cost.to.earnings(csb.data.year.ccbasic, "{point.year}", "Averaged across all school types")
+```{r tuitiontoearninst, fig.cap="Institution Tuition to Earnings", echo=F}
+tuition.to.earnings(csb.data.unitid, "{point.instnm}", "Averaged across all years")
 ```

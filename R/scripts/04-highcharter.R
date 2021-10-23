@@ -133,11 +133,10 @@ hc.label <- function(hc, xlab, ylab,
 
 hc.axis <- function(hc, ymin=NULL, ymax=NULL, 
                     xbands=NULL, ybands=NULL, ...){
-  hc<- hc %>%
+  hc %>%
     highcharter::hc_xAxis( plotBands = xbands ) %>%
     highcharter::hc_yAxis( min=ymin, max=ymax, 
-                           plotBands = ybands) 
-  return(hc)
+                           plotBands = ybands)
 }
   
 hc.scatter <- function(hc, zlab, boldtip=""){
