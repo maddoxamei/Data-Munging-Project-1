@@ -15,6 +15,11 @@ The data is gathered by the U.S. Department of Education, therefore there is no 
 <br/>
 **Completeness**
 
+```{r eval = FALSE}
+na.test(csb.data[!colnames(csb.data) %in% c("unitid", "instnm", "ccbasic")])
+```
+
+To test completeness we checked the number of NA values contained in each column and present the number of values that can be pushed into statistical analysis as percentages of the total entries. The general test checks for boolean, numeric and character/factor column types, with the majority of variables we chose being numeric in nature (the character columns, which we subset out, are observation identifiers). Many of the variables related to earnings had roughly $%85-90$ of the values as N/A's whereas there was more usable data in variables pertaining to cost/tuition, with roughly $%60-70$ NA values.
 
 <br/>
 **Consistent Representation**

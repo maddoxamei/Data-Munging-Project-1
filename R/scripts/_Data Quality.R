@@ -1,37 +1,57 @@
 
 #Define the function w.r.t. data frame x, prints the proportion of data not missing/NA
 missing_test <- function(x){
-  # Boolean columns
+  # Boolean column
+  if (is.logical(x) == T){
+    t_total <- sum(x)
+    na_total <- sum(is.na(x))
+    f_total <- length(x) - t_total - na_total
+    tab_x <- matrix(c(t_total, f_total, na_total), nrow = 1, ncol = 3)
+    colnames(tab_x) <- c("True", "False", "Null")
+    cat("Column Type: Boolean", "\n")
+    if(na_total == 0)
+      cat("No NA Values Found", "\n")
+    print(prop.table(tab_x)*100)   #Table that gives number of True, False and Null values as percentage of total values
+  }
   
-  # Numeric columns
-  x_prime <- apply(x, 2, function(z) z[!is.finite(z)] <- NA)     #Changes any non-finite vals to NA
-  n_tot <- 0                                    #Initialize a counter for the number of NA's
-  n_tot <- apply(x, 2, function(z) n_tot <- n_tot + sum(is.na(z)))         #Count the NA's contained in each column and output a list, each entry is the proportion of data (as decimal) in columns that is NOT missing
-  print((nrow(x) - n_tot)/nrow(x))                    #Print result
+  # Numeric column
+  if (is.numeric(x) == T) {
+    x[!is.finite(x)] <- NA     #Changes any non-finite vals to NA
+    na_total <- sum(is.na(x))                  
+    val_total <- length(x) - na_total
+    tab_x <- matrix(c(val_total, na_total), nrow = 1, ncol = 2)
+    colnames(tab_x) <- c("Accepted Value", "Null/Infinite Value")
+    cat("Column Type: Numeric", "\n")
+    if(na_total == 0)
+      cat("No NA Values Found", "\n")
+    print(prop.table(tab_x)*100)
+  }
   
   # Categorical columns
+  if (is.character(x) == T | is.factor(x) == T){
+    if (is.character(x) == T)     #Change character types to factor
+      x <- factor(x)
+    na_total <- sum(is.na(x))
+    if(na_total != 0){
+      table_x <- table(x, useNA = "always")
+      cat("Column Type: Character or Factor", "\n")
+      print(prop.table(table_x)*100)
+    }else{
+      cat("Column Type: Character or Factor", "\n", "No NA Values Found", "\n")
+      print(prop.table(table(x))*100)
+    }
+  }
 }
 
-# Define a function that outputs proportion of data with desired size, with input data frame x and desired amount of data y (chosen default is 100)
-size_test <- function(x, y = 100){
-  dt_size <- apply(x, 2, function(z) min(length(z) / y, y / length(z)))         #Takes the minimum of the column length over the desired data size y and the reciprocal, the closer to 1 the more 'appropriate' the data size
-  print(dt_size)              #Print result
+na.test <- function(x){
+  for (i in colnames(x)){
+    cat("\n","Percentage of Values for", i, "\n")
+    missing_test(x[[i]])
+  }
 }
 
 
-#Test against the data set iris
-missing_test(iris)
+## Test code using csb.data
+# na.test(csb.data[!colnames(csb.data) %in% c("unitid", "instnm", "year")])
 
-#Add a column to iris consisting of the numbers 1 to 149 and NaN, eval with missing_test
-iris2 <- iris
-iris2$Empty <- append(seq(1,149), NaN)
-View(iris2)
-
-missing_test(iris2)
-
-#Test against iris2 y = Default, y = 75, y = 300
-size_test(iris2)
-size_test(iris2, 75)
-size_test(iris2, 300)
-
-#For y = 75 or 300 the test shows that the data is twice as large or half as big, respectively, as desired
+  
