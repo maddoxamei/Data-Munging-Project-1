@@ -29,8 +29,6 @@ missing_test <- function(x){
   
   # Categorical columns
   if (is.character(x) == T | is.factor(x) == T){
-    if (is.character(x) == T)     #Change character types to factor
-      x <- factor(x)
     na_total <- sum(is.na(x))
     if(na_total != 0){
       table_x <- table(x, useNA = "always")
