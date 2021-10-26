@@ -235,6 +235,137 @@ The data is gathered by the U.S. Department of Education, therefore there is no 
 <p><br/>
 <strong>Completeness</strong></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="data-quality.html#cb6-1"></a><span class="kw">na.test</span>(csb.data[<span class="op">!</span><span class="kw">colnames</span>(csb.data) <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;unitid&quot;</span>, <span class="st">&quot;instnm&quot;</span>, <span class="st">&quot;ccbasic&quot;</span>)])</span></code></pre></div>
+<pre><code>## 
+##  Percentage of Values for costt4_a 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       22.94713            77.05287
+## 
+##  Percentage of Values for costt4_p 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       1.308124            98.69188
+## 
+##  Percentage of Values for tuitionfee_in 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       39.73838            60.26162
+## 
+##  Percentage of Values for tuitionfee_out 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       39.73838            60.26162
+## 
+##  Percentage of Values for mn_earn_wne_p10 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]        11.4983             88.5017
+## 
+##  Percentage of Values for mn_earn_wne_p6 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       15.02144            84.97856
+## 
+##  Percentage of Values for mn_earn_wne_p8 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       13.41101            86.58899
+## 
+##  Percentage of Values for sd_earn_wne_p10 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]        11.4983             88.5017
+## 
+##  Percentage of Values for sd_earn_wne_p6 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       15.02144            84.97856
+## 
+##  Percentage of Values for sd_earn_wne_p8 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       13.41101            86.58899
+## 
+##  Percentage of Values for md_earn_wne_p10 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]        11.4983             88.5017
+## 
+##  Percentage of Values for md_earn_wne_p6 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       15.02144            84.97856
+## 
+##  Percentage of Values for md_earn_wne_p8 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       13.41101            86.58899
+## 
+##  Percentage of Values for pct10_earn_wne_p10 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       3.891393            96.10861
+## 
+##  Percentage of Values for pct25_earn_wne_p10 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       9.096405            90.90359
+## 
+##  Percentage of Values for pct75_earn_wne_p10 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       9.096405            90.90359
+## 
+##  Percentage of Values for pct90_earn_wne_p10 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       3.891393            96.10861
+## 
+##  Percentage of Values for pct10_earn_wne_p6 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       6.667033            93.33297
+## 
+##  Percentage of Values for pct25_earn_wne_p6 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]         11.938              88.062
+## 
+##  Percentage of Values for pct75_earn_wne_p6 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]         11.938              88.062
+## 
+##  Percentage of Values for pct90_earn_wne_p6 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       6.667033            93.33297
+## 
+##  Percentage of Values for pct10_earn_wne_p8 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]        5.29845            94.70155
+## 
+##  Percentage of Values for pct25_earn_wne_p8 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       10.75629            89.24371
+## 
+##  Percentage of Values for pct75_earn_wne_p8 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]       10.75629            89.24371
+## 
+##  Percentage of Values for pct90_earn_wne_p8 
+## Column Type: Numeric 
+##      Accepted Value Null/Infinite Value
+## [1,]        5.29845            94.70155
+## 
+##  Percentage of Values for year 
+## Column Type: Numeric 
+## No NA Values Found 
+##      Accepted Value Null/Infinite Value
+## [1,]            100                   0</code></pre>
 <p>To test completeness we checked the number of NA values contained in each column and present the number of values that can be pushed into statistical analysis as percentages of the total entries. The general test checks for boolean, numeric and character/factor column types, with the majority of variables we chose being numeric in nature (the character columns, which we subset out, are observation identifiers). Many of the variables related to earnings had roughly <span class="math inline">\(%85-90\)</span> of the values as N/A’s whereas there was more usable data in variables pertaining to cost/tuition, with roughly <span class="math inline">\(%60-70\)</span> NA values.</p>
 <p><br/>
 <strong>Consistent Representation</strong>
