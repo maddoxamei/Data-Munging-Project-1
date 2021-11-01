@@ -1,1 +1,117 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
 # Statistical Inference
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(car) #vif
+```
+
+```{r}
+csb.2021 <- read.csv("Most-Recent-Cohorts-All-Data-Elements.csv", na.strings = c("PrivacySuppressed", "NULL"))
+col.ind <- c(which(colnames(csb.2021)=="MN_EARN_WNE_P10"):
+which(colnames(csb.2021)=="GT_25K_P9"), grep("PCIP", colnames(csb.2021)), which(colnames(csb.2021)=="NPT4_PUB"):which(colnames(csb.2021)=="TUITIONFEE_PROG"))
+csb21.sub <- csb.2021[,col.ind]
+csb.inf <- sample(csb21.sub, size = 1000, replace = FALSE)
+```
+
+#PCA Exploration
+
+```{r}
+pca.obj <- prcomp(data.frame(na.omit(csb.inf[,c(2,71:108, 171:172)])), scale.=TRUE)
+plot(pca.obj)
+pca.sum <- summary(pca.obj)
+pca.sum
+```
+
+10 PC loadings necessary to explain 50% of variation
+
+21 PC loadings necessary to explain 75% & 26 for 85% of variation
+
+21 dimensions necessary to maintain in model to capture 75% of variation in the data.
+
+
+#Degree type percentage in predicting median earnings
+
+```{r}
+wg.deg <- csb.inf[,c(2,71:108)]
+plot(MD_EARN_WNE_P10 ~ ., data = wg.deg)
+#relationships appear to be typically linear -- ok to continue with linear regression
+
+hist(wg.deg$MD_EARN_WNE_P10) #little to no skew
+lm.deg <- lm(MD_EARN_WNE_P10 ~ ., data = wg.deg)
+summary(lm.deg)
+lm.deg.red <- step(lm.deg) #reducing model based on AICc
+vif(lm.deg.red) #none over 5 -- keep reduced model
+plot(lm.deg.red) #issues with residuals
+hist(lm.deg.red$residuals) #looks ok
+summary(lm.deg.red)
+
+ggplot(wg.deg, aes(x= PCIP04 + PCIP09 + PCIP10 + PCIP11 + 
+    PCIP14 + PCIP15 + PCIP22 + PCIP24 + PCIP26 + PCIP39 + PCIP40 + 
+    PCIP42 + PCIP45 + PCIP47 + PCIP49 + PCIP50 + PCIP51 + PCIP52, y = MD_EARN_WNE_P10)) + 
+  geom_point(col = "blue", alpha = 0.7) +
+  stat_smooth(method = "lm", col = "red") + ylim(0,100000)
+
+
+```
+
+This multiple linear regression model using degree type percentages captures 50% of the variation in median earnings 10 years after college. There are issues of overfitting and difficulties in interpretation due to the high dimensions of the model. However the model is statistically significant in predicting median earnings after 10 years with a p-value of approximately 0.
+
+
+
+#Tuition in predicting median earnings
+
+```{r}
+pairs(csb.inf[,c(2,171,172)]) # pretty linear relationship btwn MD_EARN and tuition vars
+#issue of multicollinearity btwn explanatory vars
+wg.tuit <- csb.inf[,c(2,171,172)]
+lm.tuit.test <- lm(MD_EARN_WNE_P10 ~ ., data = wg.tuit)
+summary(lm.tuit.test)
+
+summary(lm(MD_EARN_WNE_P10 ~ TUITIONFEE_IN, data = wg.tuit))
+summary(lm(MD_EARN_WNE_P10 ~ TUITIONFEE_OUT, data = wg.tuit)) #out explains greater amount of variation in response than in state
+lm.tuit <- lm(MD_EARN_WNE_P10 ~ TUITIONFEE_OUT, data = wg.tuit)
+#dropping in state tuition because of multicollinearity btwn in and out of state tuition
+confint(lm.tuit)
+```
+
+This linear regression using out of state tuition explains 42% of the variation in median earnings 10 years after being out of college. The F-statistic output tells us there is a statistically signficicant relationship between out of state tuition and median earnings 10 years after college with a p-value of approximately 0.
+
+Based on this model, per \$1,000 increase in out of state tuition, we expect an increase of \$5,485 in median earnings 10 years post college, on average.
+
+We are 95% confident that per \$1,000 increase in out of state tuition, we expect median earnings 10 years after college to increase by between \$4,879 and \$6,092, on average.
+
+#Combined Tuition & Degrees
+
+```{r}
+wg.both <- csb.inf[,c(2,71:108, 171,172)]
+
+## use previous reduced models combined
+
+lm.both <- lm(formula = MD_EARN_WNE_P10 ~ PCIP04 + PCIP09 + PCIP10 + PCIP11 + 
+    PCIP14 + PCIP15 + PCIP22 + PCIP24 + PCIP26 + PCIP39 + PCIP40 + 
+    PCIP42 + PCIP45 + PCIP47 + PCIP49 + PCIP50 + PCIP51 + PCIP52 + TUITIONFEE_OUT, 
+    data = wg.both)
+#reducing with AICc & VIF
+lm.both.red <- step(lm.both)
+vif(lm.both.red) #vifs look good
+summary(lm.both.red)
+
+ggplot(wg.both, aes(x = PCIP04 + PCIP09 + PCIP11 + PCIP14 + 
+    PCIP15 + PCIP22 + PCIP24 + PCIP39 + PCIP40 + PCIP42 + PCIP45 + 
+    PCIP47 + PCIP49 + PCIP51 + PCIP52 + TUITIONFEE_OUT, y = MD_EARN_WNE_P10)) + 
+  geom_point(col = "coral2", alpha = 0.7) + xlab("Fitted regression predictors") + ylab("Median earnings 10 years after college") +
+  stat_smooth(method = "lm", col = "goldenrod", alpha = 0.5, fill = "gold") + ylim(0,100000) + theme_light()
+
+```
+
+The reduced model using the degree % predictors and the out of state tuition variable as a predictor captures approximately 60% of the variation in median earnings 10 years after college. 
+
+F-test statistic has a p-value of apprixmately 0, which tells us at least one of the predictors in the model has a statistically significant relationship with the response variable, median earnings 10 years after college.
+
+The model still has a high AICc and there may be issues of overfitting due to the inclusion of 16 explanatory variables. In the future I would be interested in exploring using out of state tuition along with other predictors to better capture the variation and relationship with median earnings after college.

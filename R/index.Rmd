@@ -1,6 +1,6 @@
 ---
 title: "College Scorecard Report"
-author: "Mei Maddox, Mitchelle V., Conor Welsh"
+author: "Mei Maddox, Michelle Voight, Conor Welsh"
 date: "Last Compiled on `r format(Sys.Date(), format='%b %d %Y')`"
 output:
   bookdown::pdf_book: default
